@@ -1,4 +1,4 @@
-import { get, writable } from "svelte/store";
+import { get, writable, type Writable } from "svelte/store";
 import { goto } from "$app/navigation";
 import { Client, Room } from "colyseus.js";
 
@@ -9,7 +9,7 @@ export const room = writable(null);
 
 export const chatMessages = writable([]);
 
-export const gameState = writable(null);
+export const gameState: Writable<object|null> = writable(null);
 
 const afterJoin = async (r: Room) => {
   goto(`?room=${r.roomId}`);
@@ -23,7 +23,11 @@ export const addDefaultListeners = (r: Room) => {
   });
 
   r.onMessage("chat_msg", (message) => {
-    chatMessages.update(currentItems => [...currentItems, message]);
+    if (!gameState) return;
+    chatMessages.update(currentItems => [...currentItems, {
+      playerName: get(gameState)?.players.get(message.playerId)?.name,
+      text: message.text
+    }]);
   });
 }
 

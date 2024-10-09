@@ -38,8 +38,8 @@ chatMessages.subscribe(async () => {
   <div id="chat-box" class="mt-auto mb-4 overflow-y-auto" style="flex-grow:0;flex-shrink:1">
     {#each $chatMessages as msg}
       <div class="break-words">
-        {#if msg.playerId}
-          <span class="text-red-500">{$gameState.players.get(msg.playerId)?.name}</span>: {msg.text}
+        {#if msg.playerName}
+          <span class="text-red-500">{msg.playerName}</span>: {msg.text}
         {:else}
           <i>{msg.text}</i>
         {/if}
