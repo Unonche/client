@@ -24,27 +24,14 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Checkout target repo
-        uses: actions/checkout@v3
+      - name: Deploy to external repository
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.PAT_TOKEN }}
         with:
-          repository: Unonche/unonche.github.io
-          token: ${{ secrets.PAT_TOKEN }}
-          ref: main
-          path: build-repo
-
-      - name: Copy built files to target repo
-        working-directory: build
-        run: |
-          find ../build-repo -mindepth 1 -not -name '.git' -exec rm -rf {} +
-          cp -r * ../build-repo
-
-      - name: Commit and push changes
-        working-directory: build-repo
-        run: |
-          git remote set-url origin https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/Unonche/unonche.github.io.git
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "Deploying built project [skip ci]" || echo "Nothing to commit"
-          git push origin main
+          source-directory: build/
+          destination-github-username: Unonche
+          destination-repository-name: unonche.github.io
+          user-email: 173433735+pepe-onche@users.noreply.github.com
+          target-branch: "main"
 
