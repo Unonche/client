@@ -2,19 +2,23 @@
     <title>Unonche</title> 
 </svelte:head>
 
-<script>
-import { page } from '$app/stores';
+<script lang="ts">
 import CreateRoom from '../createRoom.svelte';
 import JoinRoom from '../joinRoom.svelte';
 import Game from '../game.svelte';
 import { room, leaveRoom } from "../stores/colyseus";
-import { onDestroy } from "svelte";
+import { onDestroy, onMount } from "svelte";
 
 onDestroy(() => {
   leaveRoom();
 });
 
-$: roomId = $page.url.searchParams.get('room');
+let roomId: string|null = null;
+
+onMount(() => {
+	const url = new URL(window.location.href);
+	roomId = url.searchParams.get('room');
+});
 
 $: joiningRoom = !!roomId && !$room;
 $: creatingRoom = !roomId && !$room;

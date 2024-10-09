@@ -1,12 +1,17 @@
 <script lang="ts">
-import { page } from '$app/stores';
+import { onMount } from "svelte";
 import { getToastStore } from '@skeletonlabs/skeleton';
 import { joinRoom } from "./stores/colyseus";
 import AvatarSelector from "./avatarSelector.svelte";
 
 let avatar: string|null;
 let playerName = '';
-$: roomId = $page.url.searchParams.get('room');
+let roomId: string|null = null;
+
+onMount(() => {
+	const url = new URL(window.location.href);
+	roomId = url.searchParams.get('room');
+});
 
 const toastStore = getToastStore();
 
