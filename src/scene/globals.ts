@@ -42,8 +42,9 @@ export const actions = {};
 export async function loadCardAssets() {
   if (cardTexturesLoaded) return;
 
-  for (const textureName of Object.keys(cardTextures)) {
+  await Promise.all(Object.keys(cardTextures).map(async (textureName) => {
     cardTextures[textureName] = await Assets.load('cards/'+textureName+'.png');
-  }
+  }))
+
   cardTexturesLoaded = true;
 }

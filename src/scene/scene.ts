@@ -34,16 +34,19 @@ export class Scene {
   }
 
   async loadAssets() {
-    await Promise.all([
+    const loadAvatars = async () => await Promise.all([
       'rire','jesus','magalax','mickey','zidane','fatigue','pepe','chat',
     ].map(async (str: string) => {
       this.assets[str] = await Assets.load('avatars/'+str+'.png');
-    }));
+    }))
 
-    this.assets['radialgradient'] = await Assets.load('radialgradient.png');
-    this.assets['spiral'] = await Assets.load('spiral.png');
 
-    await loadCardAssets();
+    await Promise.all([
+      (async () => this.assets['radialgradient'] = await Assets.load('radialgradient.png'))(),
+      (async () => this.assets['spiral'] = await Assets.load('spiral.png'))(),
+      loadAvatars(),
+      loadCardAssets()
+    ])
   }
 
 
