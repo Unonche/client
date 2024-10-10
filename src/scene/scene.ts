@@ -3,7 +3,7 @@ import gsap from "gsap";
 import { actions, colors, loadCardAssets, scene, screen, self } from "../scene/globals";
 import { Deck } from "../scene/deck";
 import { UnoncheButton } from "../scene/unonche-button";
-import { debounce } from "$lib/utils";
+import { debounce, sleep } from "$lib/utils";
 import { CardBack, CardFront, type CardData } from "./card";
 import { Player, type PlayerData } from "./player";
 import { Decoration } from "./decoration";
@@ -173,22 +173,29 @@ export class Scene {
     this.colorSelector?.destroy();
     this.colorSelector = new ColorSelector(cardIndex);
   }
-  onDrawCard(playerId: string, cardData: CardData) {
+  async onDrawCards(playerId: string, cardsData: CardData[]|null, cardsAmount: number) {
     if (!this.deck) return;
 
     const player = this.players.get(playerId);
     if (!player) return;
 
-    let card;
-    if (playerId === self.id && cardData) {
-      card = new CardFront(this.deck.x, this.deck.y, 0, cardData.color, cardData.value, true);
-    } else {
-      card = new CardBack(this.deck.x, this.deck.y, 0);
-    }
+    // Draw the cards one by one
+    for (let i = 0; i < cardsAmount; i++) {
+      let card;
+      const cardData = cardsData ? cardsData[i] : null;
+      if (playerId === self.id && cardData) {
+        card = new CardFront(this.deck.x, this.deck.y, 0, cardData.color, cardData.value, true);
+      } else {
+        card = new CardBack(this.deck.x, this.deck.y, 0);
+      }
 
-    player.hand.addCard(card);
-    this.deck.setDeckSize(this.deck.deckSize-1);
-    this.deck.update();
+      player.hand.addCard(card);
+      this.deck.setDeckSize(this.deck.deckSize-1);
+      this.deck.update();
+      if (i < cardsAmount-1) {
+        await sleep(400);
+      }
+    }
   }
   onNewTurn(playerId: string, startTime: number) {
     for (const p of this.players.values()) {
@@ -199,11 +206,7 @@ export class Scene {
     if (!player) return;
     player.startTimer(startTime);
   }
-  onWin(playerId: string, players: Map<string, object>) {
-    const player = players.get(playerId);
-    if (player) {
-      // show somethind
-    }
+  onWin() {
     this.reset();
   }
   onEnd() {
