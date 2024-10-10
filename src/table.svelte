@@ -127,10 +127,10 @@ function onClipboard() {
     {#if showWin}
       <Win bind:playerName={winnerName}></Win>
     {:else}
-      <div class="p-4 flex flex-col items-center">
+      <div class="p-4 flex flex-col items-center" style="max-width: 100%">
         <img src="logo.png" alt="logo" class="w-3/4 py-4"/>
         {#if $gameState.players.size < 2}
-          <span class="px-3 py-1 text-red-500 mb-2 font-bold bg-surface-900 rounded-md">Il faut au moins 2 joueurs pour commencer une partie</span>
+          <span class="px-3 py-1 text-red-500 mb-2 font-bold bg-surface-900 rounded-md text-center">Il faut au moins 2 joueurs pour commencer une partie</span>
         {/if}
         <div class="w-full md:w-2/4 bg-surface-900 rounded-md text-center p-4 mb-2">
           <div class="font-bold mb-2">Invitez des joueurs avec ce lien:</div>
