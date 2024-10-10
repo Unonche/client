@@ -4,7 +4,7 @@ import AvatarSelector from "./avatarSelector.svelte";
 
 let avatar: string|null;
 let playerName = '';
-$: allowed = playerName.length >= 3 && playerName.length <= 15;
+$: allowed = /^[-_a-zA-Z0-9]{3,15}$/.test(playerName);
 
 function submit() {
   if (!allowed || !avatar) return;
