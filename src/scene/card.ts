@@ -25,7 +25,8 @@ export class CardFront extends Sprite implements GameObject {
     else text = value.toString()[0];
 
     let img;
-    if (value === 'wild' || value === 'draw_four') {
+    let imgScale = 1;
+    if (value === 'wild' || value === 'draw_four' || value === 'poc') {
       const sprite = new Sprite(cardTextures['wild_inner']);
       sprite.anchor.set(0.5, 0.5);
       sprite.x = 0;
@@ -35,7 +36,16 @@ export class CardFront extends Sprite implements GameObject {
     } 
 
     let bigText;
-    if (value === 'wild') {
+    if (value === 'poc') {
+      img = cardTextures['poc'];
+      imgScale = 0.5;
+      const sprite = new Sprite(cardTextures['poc']);
+      sprite.anchor.set(0.5, 0.5);
+      sprite.x = 0;
+      sprite.y = 0;
+      sprite.scale = 1;
+      this.addChild(sprite);
+    } else if (value === 'wild') {
       img = cardTextures['wild_icon'];
     } else if (value === 'draw_two' || value === 'draw_four') {
       const sprite = new Sprite(cardTextures['draw_two']);
@@ -114,11 +124,11 @@ export class CardFront extends Sprite implements GameObject {
 
     if (img) {
       const smallSprite = new Sprite(img);
-      smallSprite.scale = 1;
+      smallSprite.scale = imgScale;
       smallSprite.x = -cardTextures[color].width/2+65;
       smallSprite.y = -cardTextures[color].height/2+65;
       const smallSpriteReversed = new Sprite(img);
-      smallSpriteReversed.scale = 1;
+      smallSpriteReversed.scale = imgScale;
       smallSpriteReversed.x = cardTextures[color].width/2-65;
       smallSpriteReversed.y = cardTextures[color].height/2-65;
       smallSpriteReversed.rotation = Math.PI;

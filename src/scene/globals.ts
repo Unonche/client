@@ -21,6 +21,7 @@ export const cardTextures: Record<string, Texture|null> = {
   draw_two: null,
   skip: null,
   reverse: null,
+  poc: null,
   wild_inner: null,
   wild_icon: null,
 }
