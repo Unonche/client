@@ -1,25 +1,63 @@
 import type { GameObject } from "./gameObject";
-import { Container } from "pixi.js";
-import { actions, scene } from "./globals";
+import { Container, FillGradient, Graphics } from "pixi.js";
+import { actions, cardHeight, cardWidth, scene } from "./globals";
 import { CardBack } from "./card";
 
 export class Deck extends Container implements GameObject {
   deckSize: number;
-  constructor(deckSize) {
+  card: CardBack;
+  bottom: Graphics;
+  angles: Graphics;
+  gradientFill: FillGradient;
+
+  constructor(deckSize: number) {
     super();
     this.deckSize = deckSize;
 
-    const card = new CardBack(0, 0, 0);
+    this.card = new CardBack(0, 0, 0);
+    this.card.x = -this.deckSize*0.3;
+    this.card.y = -this.deckSize*0.3;
     this.interactive = true;
     this.cursor = 'pointer';
+
+    this.angles = new Graphics();
+
+    this.gradientFill = new FillGradient(0, 58, 8, 50);
+    this.gradientFill.addColorStop(0, '#555555');
+    this.gradientFill.addColorStop(1, '#cccccc');
+
+    this.bottom = new Graphics().roundRect(0, 0, cardWidth, cardHeight, 8).fill(this.gradientFill);
+    this.bottom.x = -cardWidth/2;
+    this.bottom.y = -cardHeight/2;
 
     this.update();
 
     this.on('click', () => {
       actions.drawCard();
     });
-    this.addChild(card);
+
+    this.addChild(this.bottom);
+    this.addChild(this.angles);
+    this.addChild(this.card);
     scene.app.stage.addChild(this);
+  }
+
+  draw() {
+    this.card.x = -this.deckSize*0.3;
+    this.card.y = -this.deckSize*0.3;
+
+    this.angles.clear();
+    this.angles.poly([
+      {x: this.card.x+cardWidth/2-2, y: this.card.y-cardHeight/2+2},
+      {x: this.bottom.x+cardWidth-2, y: this.bottom.y+2},
+      {x: this.bottom.x+cardWidth-2, y: this.bottom.y+60},
+      {x: this.card.x+cardWidth/2-2, y: this.card.y+60-cardHeight/2+2},
+    ]).fill(this.gradientFill.gradientStops[1].color).poly([
+      {x: this.card.x-cardWidth/2+2, y: this.card.y+cardHeight/2-2},
+      {x: this.bottom.x+2, y: this.bottom.y+cardHeight-2},
+      {x: this.bottom.x+2, y: this.bottom.y+cardHeight-60},
+      {x: this.card.x-cardWidth/2+2, y: this.card.y-60+cardHeight/2-2},
+    ]).fill(this.gradientFill.gradientStops[0].color);
   }
 
   setDeckSize(deckSize: number) {
@@ -29,6 +67,7 @@ export class Deck extends Container implements GameObject {
   update() {
     if (!this.position) return;
 
+    this.draw();
     this.x = scene.width/2 - 150;
     this.y = scene.height/2;
     this.alpha = this.deckSize <= 0 ? 0 : 1;

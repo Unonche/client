@@ -1,21 +1,26 @@
-import { Graphics } from "pixi.js";
+import { Sprite } from "pixi.js";
 import type { GameObject } from "./gameObject";
 import { actions, scene } from "./globals";
 
-export class UnoncheButton extends Graphics implements GameObject {
+export class UnoncheButton extends Sprite implements GameObject {
   constructor() {
-    super();
-    const width = 100;
-    const height = 100;
+    super(scene.assets['unonchebtn']);
 
-    this.beginFill(0xffffff); // White background
-    this.lineStyle(2, 0x000000); // Black border
-    this.drawRoundedRect(0, 0, width, height, 10);
-    this.endFill();
+    this.scale = 0.5;
 
-    this.pivot.set(width/2, height/2);
+    this.anchor.set(1, 1);
 
     this.interactive = true;
+
+    this.on('mousedown', () => {
+      this.setPressing();
+    });
+    this.on('mouseup', () => {
+      this.setDefault();
+    });
+    this.on('mouseout', () => {
+      this.setDefault();
+    });
 
     this.on('click', () => {
       actions.sayUno();
@@ -26,11 +31,18 @@ export class UnoncheButton extends Graphics implements GameObject {
     scene.app.stage.addChild(this);
   }
 
+  setPressing() {
+    this.texture = scene.assets['unonchebtnpress'];
+  }
+  setDefault() {
+    this.texture = scene.assets['unonchebtn'];
+  }
+
   update() {
     if (!this.position) return;
 
-    this.position.x = scene.width/2+150;
-    this.position.y = scene.height/2;
+    this.x = scene.width/2+240;
+    this.y = scene.height/2+150/2;
   }
 }
 

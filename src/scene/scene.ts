@@ -44,6 +44,8 @@ export class Scene {
     await Promise.all([
       (async () => this.assets['radialgradient'] = await Assets.load('radialgradient.png'))(),
       (async () => this.assets['spiral'] = await Assets.load('spiral.png'))(),
+      (async () => this.assets['unonchebtn'] = await Assets.load('unonchebtn.png'))(),
+      (async () => this.assets['unonchebtnpress'] = await Assets.load('unonchebtnpress.png'))(),
       loadAvatars(),
       loadCardAssets()
     ])
