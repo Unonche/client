@@ -34,6 +34,15 @@ chatMessages.subscribe(async () => {
 });
 </script>
 
+<style>
+:global(#chat-box span.pseudo) {
+  color: rgb(239, 68, 68);
+}
+:global(#chat-box span.effect) {
+  color: rgb(239, 239, 68);
+}
+</style>
+
 <div class="h-full min-h-0 flex flex-col p-4">
   <div id="chat-box" class="mt-auto mb-4 overflow-y-auto" style="flex-grow:0;flex-shrink:1">
     {#each $chatMessages as msg}
@@ -41,7 +50,7 @@ chatMessages.subscribe(async () => {
         {#if msg.playerName}
           <span class="text-red-500">{msg.playerName}</span>: {msg.text}
         {:else}
-          <i>{msg.text}</i>
+          <i>{@html msg.text}</i>
         {/if}
       </div>
     {/each}

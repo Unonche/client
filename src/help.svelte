@@ -64,7 +64,7 @@ onMount(async () => {
     <li>ou le <b>même symbole</b> que celle-ci.</li>
   </ul>
   <p>
-    Lorsque qu’un joueur n’a plus qu’une carte en sa possession, il doit crier « Unonche! » pour avertir tous les autres joueurs. S’il oublie de le faire et qu’un joueur s’en aperçoit en criant « contre Unonche! », il devra piocher 2 cartes en pénalité.
+    Lorsque qu’un joueur n’a plus qu’une carte en sa possession, il doit crier « Unonche! » (avec le bouton « ! ») pour avertir tous les autres joueurs. S’il oublie de le faire et qu’un joueur s’en aperçoit en criant « contre Unonche! », il devra piocher 2 cartes en pénalité.
   </p>
   <h2 class="text-xl text-primary-500 mt-2 mb-1">Cartes « Action »</h2>
   <div class="flex flex-wrap">
