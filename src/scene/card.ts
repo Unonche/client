@@ -72,8 +72,8 @@ export class CardFront extends Sprite implements GameObject {
       this.addChild(sprite);
     } else if (value !== 'wild') {
       const bigStyle = new TextStyle({
-        fontFamily: 'Arial',
-        fontWeight: 'bold',
+        fontFamily: 'Quicksand',
+        fontWeight: '700',
         fontSize: cardTextures[color].height/3,
         fill: '#ffffff',
         align: 'center',
@@ -136,8 +136,8 @@ export class CardFront extends Sprite implements GameObject {
       this.addChild(smallSpriteReversed);
     } else {
       const smallStyle = new TextStyle({
-        fontFamily: 'Arial',
-        fontWeight: 'bold',
+        fontFamily: 'Quicksand',
+        fontWeight: '700',
         fontSize: cardTextures[color].height/7,
         fill: '#ffffff',
         align: 'center',
