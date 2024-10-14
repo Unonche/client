@@ -26,7 +26,7 @@ export class CardFront extends Sprite implements GameObject {
 
     let img;
     let imgScale = 1;
-    if (value === 'wild' || value === 'draw_four' || value === 'poc') {
+    if (['wild', 'draw_four', 'poc', 'luck', 'sleep'].includes(value)) {
       const sprite = new Sprite(cardTextures['wild_inner']);
       sprite.anchor.set(0.5, 0.5);
       sprite.x = 0;
@@ -40,6 +40,24 @@ export class CardFront extends Sprite implements GameObject {
       img = cardTextures['poc'];
       imgScale = 0.5;
       const sprite = new Sprite(cardTextures['poc']);
+      sprite.anchor.set(0.5, 0.5);
+      sprite.x = 0;
+      sprite.y = 0;
+      sprite.scale = 1;
+      this.addChild(sprite);
+    } else if (value === 'luck') {
+      img = cardTextures['dice'];
+      imgScale = 0.5;
+      const sprite = new Sprite(cardTextures['dice']);
+      sprite.anchor.set(0.5, 0.5);
+      sprite.x = 0;
+      sprite.y = 0;
+      sprite.scale = 1;
+      this.addChild(sprite);
+    }  else if (value === 'sleep') {
+      img = cardTextures['sleep'];
+      imgScale = 0.5;
+      const sprite = new Sprite(cardTextures['sleep']);
       sprite.anchor.set(0.5, 0.5);
       sprite.x = 0;
       sprite.y = 0;

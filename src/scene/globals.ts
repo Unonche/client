@@ -24,6 +24,8 @@ export const cardTextures: Record<string, Texture|null> = {
   poc: null,
   wild_inner: null,
   wild_icon: null,
+  dice: null,
+  sleep: null,
 }
 export const hands: Record<string, Hand> = {};
 export const screen: Record<string, boolean> = {
