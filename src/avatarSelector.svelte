@@ -4,7 +4,7 @@ let avatars = ['rire','jesus','magalax','mickey','zidane','fatigue','pepe','chat
 export let avatar: string|null;
 
 onMount(() => {
-  avatar = avatars[Math.floor(Math.random()*(avatars.length-1))]
+  avatar = avatars[Math.floor(Math.random()*avatars.length)]
 })
 </script>
 
