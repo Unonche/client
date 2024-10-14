@@ -40,18 +40,19 @@ export class Scene {
       this.assets[str] = await Assets.load('avatars/'+str+'.png');
     }))
 
-    Assets.addBundle('fonts', [
-        { alias: 'Quicksand', src: '/fonts/Quicksand-Variable.ttf' },
-    ]);
+    const font = new FontFace("Quicksand", "url('/fonts/Quicksand-Variable.ttf')", {
+      weight: '700'
+    });
 
     await Promise.all([
-      Assets.loadBundle('fonts'),
+      font.load(),
       (async () => this.assets['radialgradient'] = await Assets.load('radialgradient.png'))(),
       (async () => this.assets['spiral'] = await Assets.load('spiral.png'))(),
       (async () => this.assets['unonchebtn'] = await Assets.load('unonchebtn.png'))(),
       loadAvatars(),
       loadCardAssets()
     ])
+    document.fonts.add(font);
   }
 
 
