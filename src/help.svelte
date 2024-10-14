@@ -13,7 +13,6 @@ let drawFour:HTMLCanvasElement;
 let poc:HTMLCanvasElement;
 let sleep:HTMLCanvasElement;
 let luck:HTMLCanvasElement;
-let motherfucker:HTMLCanvasElement;
 
 const width = 60;
 const height = width*(cardHeight/cardWidth);

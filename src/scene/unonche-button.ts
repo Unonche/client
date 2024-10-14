@@ -1,7 +1,7 @@
 import { Graphics, Sprite } from "pixi.js";
 import gsap from "gsap";
 import type { GameObject } from "./gameObject";
-import { actions, scene } from "./globals";
+import { actions, scene, screen } from "./globals";
 
 export class UnoncheButton extends Sprite implements GameObject {
   sprite: Sprite;
@@ -69,8 +69,13 @@ export class UnoncheButton extends Sprite implements GameObject {
   update() {
     if (!this.position) return;
 
-    this.x = scene.width/2+200;
-    this.y = scene.height/2;
+    if (screen.isHorizontal || scene.playerIds.length <= 3) {
+      this.x = scene.width/2+200;
+      this.y = scene.height/2;
+    } else {
+      this.x = scene.width/2;
+      this.y = scene.height/2-190;
+    }
     this.drawCircle();
   }
 }

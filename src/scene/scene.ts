@@ -71,7 +71,8 @@ export class Scene {
     this.app.stage.addChild(this.mainContainer);
 
     const resize = () => {
-      screen.isMobile = window.matchMedia('screen and (max-width: 768px)').matches || window.matchMedia('screen and (max-height: 768px)').matches;
+      screen.isMobile = window.matchMedia('screen and (max-width: 1400px)').matches || window.matchMedia('screen and (max-height: 768px)').matches;
+      screen.isMicro = window.matchMedia('screen and (max-width: 850px)').matches || window.matchMedia('screen and (max-height: 768px)').matches;
       screen.isHorizontal = window.innerWidth > window.innerHeight;
       this.updateAll(false);
     }
@@ -86,7 +87,7 @@ export class Scene {
     if (this.started) return;
 
     this.disposePile = new Container();
-    this.app.stage.addChild(this.disposePile);
+    this.mainContainer.addChild(this.disposePile);
 
     if (disposedCards.length > 0) {
       for (const cardData of disposedCards) {

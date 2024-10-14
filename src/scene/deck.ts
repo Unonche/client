@@ -1,6 +1,6 @@
 import type { GameObject } from "./gameObject";
 import { Container, FillGradient, Graphics } from "pixi.js";
-import { actions, cardHeight, cardWidth, scene } from "./globals";
+import { actions, cardHeight, cardWidth, scene, screen } from "./globals";
 import { CardBack } from "./card";
 
 export class Deck extends Container implements GameObject {
@@ -71,9 +71,15 @@ export class Deck extends Container implements GameObject {
     if (!this.position) return;
 
     this.draw();
-    this.x = scene.width/2 - 186;
-    this.y = scene.height/2;
-    // this.rotation = Math.PI/5;
+    if (screen.isHorizontal || scene.playerIds.length <= 3) {
+      this.x = scene.width/2 - 186;
+      this.y = scene.height/2;
+      this.rotation = 0;
+    } else {
+      this.x = scene.width/2;
+      this.y = scene.height/2 + 160;
+      this.rotation = Math.PI/2;
+    }
     this.alpha = this.deckSize <= 0 ? 0 : 1;
   }
 }

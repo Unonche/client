@@ -29,6 +29,7 @@ export const cardTextures: Record<string, Texture|null> = {
 }
 export const hands: Record<string, Hand> = {};
 export const screen: Record<string, boolean> = {
+  isMicro: false,
   isMobile: false,
   isHorizontal: false
 }

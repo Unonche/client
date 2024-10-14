@@ -25,10 +25,10 @@ export class Player extends Container implements GameObject {
     this.hand = new Hand(this.id, handSize, cardsData||null);
     this.timer = new Graphics();
     this.addChild(this.timer);
+    this.addChild(this.hand);
     this.avatarName = data.avatar;
     this.avatar = this.createAvatar();
 
-    this.addChild(this.hand);
     scene.mainContainer.addChild(this);
   }
 
@@ -60,6 +60,7 @@ export class Player extends Container implements GameObject {
   getPosition() {
     const selfOffset = screen.isMobile ? -100 : 60;
     const offset = screen.isMobile ? -150 : 60;
+    const cornerOffset = screen.isMobile ? offset+80 : offset;
 
     let orderedPlayersArray;
     if (scene.playerIds.includes(self.id)) {
@@ -86,12 +87,12 @@ export class Player extends Container implements GameObject {
         }
       case 3:
         if (playerI === 1) return {
-          x: offset,
-          y: offset
+          x: cornerOffset,
+          y: cornerOffset
         }
         if (playerI === 2) return {
-          x: scene.width-offset,
-          y: offset
+          x: scene.width-cornerOffset,
+          y: cornerOffset
         }
         return defaultPos;
       case 4:
@@ -115,12 +116,12 @@ export class Player extends Container implements GameObject {
             y: scene.height * (3/5)
           }
           if (playerI === 2) return {
-            x: offset+60,
-            y: offset+60
+            x: cornerOffset,
+            y: cornerOffset
           }
           if (playerI === 3) return {
-            x: scene.width-offset-60,
-            y: offset+60
+            x: scene.width-cornerOffset,
+            y: cornerOffset
           }
           if (playerI === 4) return {
             x: scene.width-offset,
@@ -132,12 +133,12 @@ export class Player extends Container implements GameObject {
           y: scene.height * (3/5)
         }
         if (playerI === 2) return {
-          x: offset,
-          y: offset
+          x: cornerOffset,
+          y: cornerOffset
         }
         if (playerI === 3) return {
-          x: scene.width-offset,
-          y: offset
+          x: scene.width-cornerOffset,
+          y: cornerOffset
         }
         if (playerI === 4) return {
           x: scene.width-offset,
@@ -233,9 +234,10 @@ export class Player extends Container implements GameObject {
     if (screen.isMobile) {
       this.avatar.width = 50;
       this.avatar.height = 50;
-      const offset = this.id === self.id ? 20 : 0;
-      this.avatar.x = pos.x-Math.cos(angle)*(260+offset);
-      this.avatar.y = pos.y-Math.sin(angle)*(260+offset);
+      const sideOffset = this.id === self.id ? -100 : 0;
+      const offset = this.id === self.id ? 20 : (screen.isMicro && scene.playerIds.length > 3 ? -70 : 0);
+      this.avatar.x = pos.x-Math.cos(angle)*(260+offset)+Math.cos(angle+Math.PI/2)*sideOffset;
+      this.avatar.y = pos.y-Math.sin(angle)*(260+offset)+Math.sin(angle+Math.PI/2)*sideOffset;
     } else {
       this.avatar.width = 100;
       this.avatar.height = 100;
