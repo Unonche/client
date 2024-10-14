@@ -38,6 +38,10 @@ export class ColorSelector extends Container implements GameObject {
         actions.playCard(this.cardIndex, color);
         this.close();
       });
+      g.on('tap', () => {
+        actions.playCard(this.cardIndex, color);
+        this.close();
+      });
 
       this.addChild(g);
 

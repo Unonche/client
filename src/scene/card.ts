@@ -203,23 +203,29 @@ export class CardFront extends Sprite implements GameObject {
       this.interactive = true;
       this.cursor = 'pointer';
 
-      this.on('mouseover', () => {
+      const onHover = () => {
         const cardIndex = scene.players.get(self.id).hand.cards.findIndex(c => c === this);
         scene.players.get(self.id).hand.setFocus(cardIndex);
         scene.players.get(self.id).hand.update();
-      });
-      this.on('mouseout', () => {
+      }
+      const onOut = () => {
         scene.players.get(self.id).hand.setFocus(null);
         scene.players.get(self.id).hand.update();
-      });
-      this.on('click', () => {
+      }
+      const onClick = () => {
         const cardIndex = scene.players.get(self.id).hand.cards.findIndex(c => c === this);
 
         if (cardIndex >= 0) {
           if (color === 'wild') actions.preplayWild(cardIndex);
           else actions.playCard(cardIndex);
         }
-      });
+      }
+      this.on('mouseover', onHover);
+      this.on('touchmove', onHover);
+      this.on('mouseout', onOut);
+      this.on('touchendoutside', onOut);
+      this.on('click', onClick);
+      this.on('tap', onClick);
     }
   }
 

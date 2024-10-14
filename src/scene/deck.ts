@@ -35,6 +35,9 @@ export class Deck extends Container implements GameObject {
     this.on('click', () => {
       actions.drawCard();
     });
+    this.on('tap', () => {
+      actions.drawCard();
+    });
 
     this.addChild(this.bottom);
     this.addChild(this.angles);

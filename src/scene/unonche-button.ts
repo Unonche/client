@@ -42,6 +42,9 @@ export class UnoncheButton extends Sprite implements GameObject {
     this.on('click', () => {
       actions.sayUno();
     });
+    this.on('tap', () => {
+      actions.sayUno();
+    });
 
     this.update();
 
