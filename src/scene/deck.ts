@@ -15,15 +15,15 @@ export class Deck extends Container implements GameObject {
     this.deckSize = deckSize;
 
     this.card = new CardBack(0, 0, 0);
-    this.card.x = -this.deckSize*0.3;
-    this.card.y = -this.deckSize*0.3;
+    this.card.x = -this.deckSize*0.1;
+    this.card.y = -this.deckSize*0.1;
     this.interactive = true;
     this.cursor = 'pointer';
 
     this.angles = new Graphics();
 
     this.gradientFill = new FillGradient(0, 58, 8, 50);
-    this.gradientFill.addColorStop(0, '#555555');
+    this.gradientFill.addColorStop(0, '#999999');
     this.gradientFill.addColorStop(1, '#cccccc');
 
     this.bottom = new Graphics().roundRect(0, 0, cardWidth, cardHeight, 8).fill(this.gradientFill);
@@ -43,8 +43,8 @@ export class Deck extends Container implements GameObject {
   }
 
   draw() {
-    this.card.x = -this.deckSize*0.3;
-    this.card.y = -this.deckSize*0.3;
+    this.card.x = -this.deckSize*0.1;
+    this.card.y = -this.deckSize*0.1;
 
     this.angles.clear();
     this.angles.poly([
@@ -68,8 +68,9 @@ export class Deck extends Container implements GameObject {
     if (!this.position) return;
 
     this.draw();
-    this.x = scene.width/2 - 150;
+    this.x = scene.width/2 - 186;
     this.y = scene.height/2;
+    // this.rotation = Math.PI/5;
     this.alpha = this.deckSize <= 0 ? 0 : 1;
   }
 }

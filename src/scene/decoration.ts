@@ -6,6 +6,8 @@ export class Decoration extends Container implements GameObject {
   spiral: Sprite = new Sprite();
   spiralFn: TickerCallback<Sprite>;
   colorIndicator: Sprite = new Sprite();
+  table: Graphics = new Graphics();
+  lastColor = '#ffffff';
 
   constructor() {
     super();
@@ -16,6 +18,7 @@ export class Decoration extends Container implements GameObject {
 
     this.initSpiral();
     this.initColorIndicator();
+    this.initTable();
 
     this.update();
     scene.app.stage.addChild(this);
@@ -35,20 +38,35 @@ export class Decoration extends Container implements GameObject {
     this.colorIndicator.height = 900;
     this.colorIndicator.anchor.set(0.5, 0.5);
     this.colorIndicator.alpha = 0.7;
-    // this.colorIndicator.tint = '#120b18';
     this.addChild(this.colorIndicator);
+  }
+  initTable() {
+    this.table.x = 0;
+    this.table.y = 0;
+    this.table.alpha = 0.7;
+    this.addChild(this.table);
+  }
+
+  drawTable() {
+    this.table.clear();
+    this.table.circle(scene.width/2, scene.height/2, 120).fill('#120b18').stroke({
+      color: this.lastColor, width: 3
+    });
   }
 
   setColor(color: string) {
+    this.lastColor = color;
     this.spiral.tint = color;
     this.colorIndicator.tint = color;
+    this.drawTable();
   }
 
   reset() {
     this.setColor('#ffffff');
+    this.table.clear();
   }
 
-  update() {
+  update(playing = false) {
     const max = Math.max(scene.width, scene.height);
     this.colorIndicator.x = scene.width/2;
     this.colorIndicator.y = scene.height/2;
@@ -56,6 +74,11 @@ export class Decoration extends Container implements GameObject {
     this.spiral.height = max*1.6;
     this.spiral.x = scene.width/2;
     this.spiral.y = scene.height/2;
+    if (playing) {
+      this.drawTable();
+    } else {
+      this.table.clear();
+    }
   }
 }
 

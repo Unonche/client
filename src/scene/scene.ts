@@ -1,4 +1,4 @@
-import { Application, Assets, Container, Texture } from "pixi.js";
+import { Application, Assets, Container, Graphics, Texture } from "pixi.js";
 import gsap from "gsap";
 import { actions, colors, loadCardAssets, scene, screen, self } from "../scene/globals";
 import { Deck } from "../scene/deck";
@@ -45,7 +45,6 @@ export class Scene {
       (async () => this.assets['radialgradient'] = await Assets.load('radialgradient.png'))(),
       (async () => this.assets['spiral'] = await Assets.load('spiral.png'))(),
       (async () => this.assets['unonchebtn'] = await Assets.load('unonchebtn.png'))(),
-      (async () => this.assets['unonchebtnpress'] = await Assets.load('unonchebtnpress.png'))(),
       loadAvatars(),
       loadCardAssets()
     ])
@@ -101,27 +100,24 @@ export class Scene {
       this.players.set(player.id, new Player(player, players.get(player.id)?.handSize || cardsData.length, self.id === player.id ? cardsData : null));
     }
 
+    this.started = true;
     this.updateAll(false);
 
     this.players.get(currentPlayerId)?.startTimer(turnStartTime);
-
-    this.started = true;
   }
 
   reset() {
     gsap.exportRoot().kill();
     this.decoration?.reset();
     this.disposePile.destroy();
-    // this.mainContainer = new Container();
     this.playerIds.forEach(id => this.players.get(id)?.destroy());
     this.players.clear();
     this.deck?.destroy();
     this.unoBtn?.destroy();
-    // this.colorIndicator.destroy();
     this.started = false;
     this.reversed = false;
-    // window.removeEventListener('resize', this.resizeListener);
   }
+
 
   updateAll(animate = true) {
     for (const player of this.players.values()) {
@@ -132,7 +128,7 @@ export class Scene {
       this.disposePile.position.x = this.width/2;
       this.disposePile.position.y = this.height/2;
     }
-    if (this.decoration) this.decoration.update();
+    if (this.decoration) this.decoration.update(this.started);
     if (this.deck) this.deck.update();
     if (this.unoBtn) this.unoBtn.update();
   }
@@ -172,7 +168,9 @@ export class Scene {
 
     if (cardData.value === 'reverse') this.reversed = !this.reversed;
 
-    if (this.decoration) this.decoration.setColor(cardData.color === 'wild' ? colors[nextColor] : colors[cardData.color]);
+    const color = cardData.color === 'wild' ? colors[nextColor] : colors[cardData.color];
+    if (this.decoration) this.decoration.setColor(color);
+    if (this.unoBtn) this.unoBtn.setColor(color);
   }
   onChooseColor(cardIndex: number) {
     this.colorSelector?.destroy();
@@ -189,9 +187,9 @@ export class Scene {
       let card;
       const cardData = cardsData ? cardsData[i] : null;
       if (playerId === self.id && cardData) {
-        card = new CardFront(this.deck.x, this.deck.y, 0, cardData.color, cardData.value, true);
+        card = new CardFront(this.deck.x, this.deck.y, this.deck.rotation, cardData.color, cardData.value, true);
       } else {
-        card = new CardBack(this.deck.x, this.deck.y, 0);
+        card = new CardBack(this.deck.x, this.deck.y, this.deck.rotation);
       }
 
       player.hand.addCard(card);

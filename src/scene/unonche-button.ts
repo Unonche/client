@@ -1,25 +1,42 @@
-import { Sprite } from "pixi.js";
+import { Graphics, Sprite } from "pixi.js";
+import gsap from "gsap";
 import type { GameObject } from "./gameObject";
 import { actions, scene } from "./globals";
 
 export class UnoncheButton extends Sprite implements GameObject {
+  sprite: Sprite;
+  circle: Graphics = new Graphics();
+  lastColor = '#ffffff';
+  circleAlpha = 0.5;
+  circleHoverAlpha = 0.7;
+  circleRadius = 60;
+
   constructor() {
-    super(scene.assets['unonchebtn']);
+    super();
 
-    this.scale = 0.5;
+    this.sprite = new Sprite(scene.assets['unonchebtn']);
+    this.sprite.scale = 0.5;
 
-    this.anchor.set(1, 1);
+    this.sprite.anchor.set(0.5, 0.5);
+    this.anchor.set(0.5, 0.5);
 
     this.interactive = true;
+    this.cursor = 'pointer';
+    this.alpha = this.circleAlpha;
 
-    this.on('mousedown', () => {
-      this.setPressing();
-    });
-    this.on('mouseup', () => {
-      this.setDefault();
+    this.on('mouseover', () => {
+      gsap.to(this, {
+        duration: 0.15,
+        alpha: this.circleHoverAlpha,
+        ease: "power1.inOut",
+      });
     });
     this.on('mouseout', () => {
-      this.setDefault();
+      gsap.to(this, {
+        duration: 0.15,
+        alpha: this.circleAlpha,
+        ease: "power1.inOut",
+      });
     });
 
     this.on('click', () => {
@@ -28,21 +45,30 @@ export class UnoncheButton extends Sprite implements GameObject {
 
     this.update();
 
+    this.addChild(this.circle);
+    this.addChild(this.sprite);
     scene.app.stage.addChild(this);
   }
 
-  setPressing() {
-    this.texture = scene.assets['unonchebtnpress'];
+  setColor(color: string) {
+    this.lastColor = color;
+    this.sprite.tint = color;
+    this.drawCircle();
   }
-  setDefault() {
-    this.texture = scene.assets['unonchebtn'];
+
+  drawCircle() {
+    this.circle.clear();
+    this.circle.circle(0, 0, this.circleRadius).fill('#120b18').stroke({
+      color: this.lastColor, width: 3
+    });
   }
 
   update() {
     if (!this.position) return;
 
-    this.x = scene.width/2+240;
-    this.y = scene.height/2+150/2;
+    this.x = scene.width/2+200;
+    this.y = scene.height/2;
+    this.drawCircle();
   }
 }
 
