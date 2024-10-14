@@ -11,6 +11,9 @@ let skip:HTMLCanvasElement;
 let wild:HTMLCanvasElement;
 let drawFour:HTMLCanvasElement;
 let poc:HTMLCanvasElement;
+let sleep:HTMLCanvasElement;
+let luck:HTMLCanvasElement;
+let motherfucker:HTMLCanvasElement;
 
 const width = 60;
 const height = width*(cardHeight/cardWidth);
@@ -21,10 +24,12 @@ const cards = [
   { color: 'wild', value: 'wild' },
   { color: 'wild', value: 'draw_four' },
   { color: 'wild', value: 'poc' },
+  { color: 'wild', value: 'sleep' },
+  { color: 'wild', value: 'luck' },
 ]
 
 async function init() {
-  const els: HTMLCanvasElement[] = [drawTwo, reverse, skip, wild, drawFour, poc];
+  const els: HTMLCanvasElement[] = [drawTwo, reverse, skip, wild, drawFour, poc, sleep, luck];
   await loadCardAssets();
   for (let i = 0; i < els.length; i++) {
     const cardData = cards[i];
@@ -69,5 +74,7 @@ onMount(async () => {
     <div class="flex mb-1 w-full md:w-2/4 items-center"><canvas {width} {height} bind:this={wild} /><div class="flex flex-col justify-center ml-2"><b>Carte « Joker »</b>Le joueur peut changer de couleur.</div></div>
     <div class="flex mb-1 w-full md:w-2/4 items-center"><canvas {width} {height} bind:this={drawFour} /><div class="flex flex-col justify-center ml-2"><b>Carte « +4 »</b>Le joueur peut changer de couleur, et le joueur suivant pioche quatre cartes. Cette carte ne peut être jouée que si le joueur ne possède aucune carte de la couleur actuelle.</div></div>
     <div class="flex mb-1 w-full md:w-2/4 items-center"><canvas {width} {height} bind:this={poc} /><div class="flex flex-col justify-center ml-2"><b>Carte « Post ou cancer »</b>Les autres joueurs doivent poster un message dans les cinq secondes, sinon ils piochent deux cartes.</div></div>
+    <div class="flex mb-1 w-full md:w-2/4 items-center"><canvas {width} {height} bind:this={sleep} /><div class="flex flex-col justify-center ml-2"><b>Carte « Fatigué »</b>Les autres joueurs sont fatigués et passent leur tour, le joueur joue directement un autre tour.</div></div>
+    <div class="flex mb-1 w-full md:w-2/4 items-center"><canvas {width} {height} bind:this={luck} /><div class="flex flex-col justify-center ml-2"><b>Carte « La Chance »</b>Un joueur aléatoire (le joueur qui joue cette carte est inclus) pioche deux cartes.</div></div>
   </div>
 </div>
