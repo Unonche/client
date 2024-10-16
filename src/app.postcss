@@ -5,13 +5,27 @@
 
 html,
 body {
-	@apply h-full overflow-hidden;
-	background-image: none !important;
+	@apply h-full overflow-auto;
+	background-image: radial-gradient(circle at center bottom, rgba(116,74,161,0.15) 0px, transparent 50vw);
+	font-weight: 600;
 }
 
-/* gold-nouveau theme */
+@media screen and (max-width: 800px) {
+ 	body {
+		background-image: radial-gradient(circle at center bottom, rgba(116,74,161,0.15) 0px, transparent 120vw);
+ 	}
+}
+
 @font-face {
 	font-family: 'Quicksand';
 	src: url('/fonts/Quicksand-Variable.ttf');
 	font-display: swap;
+}
+
+.dark .card {
+	--tw-ring-inset: '';
+}
+
+.shadow {
+	box-shadow: 0 0 18px rgba(0,0,0,0.5);
 }

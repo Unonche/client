@@ -18,8 +18,8 @@
 
 <Toast />
 
-<div class="flex flex-col h-full w-full">
-	<div class="w-full h-full">
+<div class="flex flex-col w-full">
+	<div class="w-full">
 		<slot />
 	</div>
 </div>

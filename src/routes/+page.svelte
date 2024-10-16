@@ -24,7 +24,7 @@ $: joiningRoom = !!roomId && !$room;
 $: creatingRoom = !roomId && !$room;
 </script>
 
-<div class="w-full h-full">
+<div class="w-full">
   {#if creatingRoom}
     <CreateRoom></CreateRoom>
   {:else if joiningRoom}

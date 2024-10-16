@@ -43,7 +43,7 @@ export const createRoom = async (name: string, avatar: string) => {
 };
 
 export const joinRoom = async (roomId: string, name: string, avatar: string) => {
-  if (!await checkRoomExists(roomId)) throw Error('Cette room n\'existe pas, qu\'est-ce que tu branle khey ?')
+  if (!await checkRoomExists(roomId)) throw Error('Cette room n\'existe pas, qu\'est-ce que tu branles khey ?')
 
   try {
     const joinedRoom: Room = await client.joinById(roomId, { name, avatar });

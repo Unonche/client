@@ -51,9 +51,9 @@ onMount(async () => {
       <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
     </svg>
   </button>
-  <h2 class="text-xl text-primary-500">Objectif du jeu</h2>
+  <h2 class="text-xl text-secondary-500">Objectif du jeu</h2>
   <p>Pour gagner, vous devez être le 1er à vous débarrasser de toutes vos cartes.</p>
-  <h2 class="text-xl text-primary-500 mt-2">Le principe</h2>
+  <h2 class="text-xl text-secondary-500 mt-2">Le principe</h2>
   <p>
     Les joueurs doivent recouvrir la dernière carte jouée par une carte :
   </p>
@@ -65,15 +65,15 @@ onMount(async () => {
   <p>
     Lorsque qu’un joueur n’a plus qu’une carte en sa possession, il doit crier « Unonche! » (avec le bouton « ! ») pour avertir tous les autres joueurs. S’il oublie de le faire et qu’un joueur s’en aperçoit en criant « contre Unonche! », il devra piocher 2 cartes en pénalité.
   </p>
-  <h2 class="text-xl text-primary-500 mt-2 mb-1">Cartes « Action »</h2>
+  <h2 class="text-xl text-secondary-500 mt-2 mb-1">Cartes « Action »</h2>
   <div class="flex flex-wrap">
-    <div class="flex mb-1 w-full md:w-2/4 items-center"><canvas {width} {height} bind:this={drawTwo} /><div class="flex flex-col justify-center ml-2"><b>Carte « +2 »</b>Le joueur suivant pioche deux cartes.</div></div>
-    <div class="flex mb-1 w-full md:w-2/4 items-center"><canvas {width} {height} bind:this={reverse} /><div class="flex flex-col justify-center ml-2"><b>Carte « Changement de sens »</b>Inverse le sens du jeu.</div></div>
-    <div class="flex mb-1 w-full md:w-2/4 items-center"><canvas {width} {height} bind:this={skip} /><div class="flex flex-col justify-center ml-2"><b>Carte « Passe ton tour »</b>Le joueur suivant passe son tour.</div></div>
-    <div class="flex mb-1 w-full md:w-2/4 items-center"><canvas {width} {height} bind:this={wild} /><div class="flex flex-col justify-center ml-2"><b>Carte « Joker »</b>Le joueur peut changer de couleur.</div></div>
-    <div class="flex mb-1 w-full md:w-2/4 items-center"><canvas {width} {height} bind:this={drawFour} /><div class="flex flex-col justify-center ml-2"><b>Carte « +4 »</b>Le joueur peut changer de couleur, et le joueur suivant pioche quatre cartes. Cette carte ne peut être jouée que si le joueur ne possède aucune carte de la couleur actuelle.</div></div>
-    <div class="flex mb-1 w-full md:w-2/4 items-center"><canvas {width} {height} bind:this={poc} /><div class="flex flex-col justify-center ml-2"><b>Carte « Post ou cancer »</b>Les autres joueurs doivent poster un message dans les cinq secondes, sinon ils piochent deux cartes.</div></div>
-    <div class="flex mb-1 w-full md:w-2/4 items-center"><canvas {width} {height} bind:this={sleep} /><div class="flex flex-col justify-center ml-2"><b>Carte « Fatigué »</b>Les autres joueurs sont fatigués et passent leur tour, le joueur joue directement un autre tour.</div></div>
-    <div class="flex mb-1 w-full md:w-2/4 items-center"><canvas {width} {height} bind:this={luck} /><div class="flex flex-col justify-center ml-2"><b>Carte « La Chance »</b>Un joueur aléatoire (le joueur qui joue cette carte est inclus) pioche deux cartes.</div></div>
+    <div class="flex mb-1 w-full md:w-2/4 items-center"><canvas {width} {height} bind:this={drawTwo} /><div class="flex flex-col justify-center ml-2"><b class="text-secondary-400">Carte « +2 »</b>Le joueur suivant pioche deux cartes.</div></div>
+    <div class="flex mb-1 w-full md:w-2/4 items-center"><canvas {width} {height} bind:this={reverse} /><div class="flex flex-col justify-center ml-2"><b class="text-secondary-400">Carte « Changement de sens »</b>Inverse le sens du jeu.</div></div>
+    <div class="flex mb-1 w-full md:w-2/4 items-center"><canvas {width} {height} bind:this={skip} /><div class="flex flex-col justify-center ml-2"><b class="text-secondary-400">Carte « Passe ton tour »</b>Le joueur suivant passe son tour.</div></div>
+    <div class="flex mb-1 w-full md:w-2/4 items-center"><canvas {width} {height} bind:this={wild} /><div class="flex flex-col justify-center ml-2"><b class="text-secondary-400">Carte « Joker »</b>Le joueur peut changer de couleur.</div></div>
+    <div class="flex mb-1 w-full md:w-2/4 items-center"><canvas {width} {height} bind:this={drawFour} /><div class="flex flex-col justify-center ml-2"><b class="text-secondary-400">Carte « +4 »</b>Le joueur peut changer de couleur, et le joueur suivant pioche quatre cartes. Cette carte ne peut être jouée que si le joueur ne possède aucune carte de la couleur actuelle.</div></div>
+    <div class="flex mb-1 w-full md:w-2/4 items-center"><canvas {width} {height} bind:this={poc} /><div class="flex flex-col justify-center ml-2"><b class="text-secondary-400">Carte « Post ou cancer »</b>Les autres joueurs doivent poster un message dans les cinq secondes, sinon ils piochent deux cartes.</div></div>
+    <div class="flex mb-1 w-full md:w-2/4 items-center"><canvas {width} {height} bind:this={sleep} /><div class="flex flex-col justify-center ml-2"><b class="text-secondary-400">Carte « Fatigué »</b>Les autres joueurs sont fatigués et passent leur tour, le joueur joue directement un autre tour.</div></div>
+    <div class="flex mb-1 w-full md:w-2/4 items-center"><canvas {width} {height} bind:this={luck} /><div class="flex flex-col justify-center ml-2"><b class="text-secondary-400">Carte « La Chance »</b>Un joueur aléatoire (le joueur qui joue cette carte est inclus) pioche deux cartes.</div></div>
   </div>
 </div>
