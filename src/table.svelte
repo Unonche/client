@@ -120,7 +120,7 @@ function onClipboard() {
 </script>
 
 <div bind:this={container} class="w-full h-full" style="max-height: 100%">
-  <canvas bind:this={el} class="w-full h-full"></canvas>
+  <canvas bind:this={el} class="w-full h-full bg-surface-900"></canvas>
 </div>
 {#if !$gameState.playing}
   <div class="absolute top-0 left-0 w-full h-full flex items-center justify-center">
