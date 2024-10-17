@@ -8,7 +8,7 @@ import { avatars } from "./scene/globals"
   <ul>
     {#each $gameState.players.values() as player}
       <li class:border-primary-200={player.id === $gameState.currentPlayerId} class:border-transparent={player.id !== $gameState.currentPlayerId} class:bg-primary-800={player.id === $gameState.currentPlayerId} class="border-l-2 px-4 py-1 flex items-center">
-        <div style="width: 28px; height: 28px;" class="relative inline-block mr-2 shrink-0">
+        <div style="width: 28px; height: 28px;" class="relative inline-block mr-2 shrink-0 overflow-hidden">
           <div class:grayscale={player.spectator} class="rounded-full bg-surface-900"
             style="transform: scale(0.28); transform-origin: 0 0; width:100px; height:100px; background-image: url('avatars.png'); background-position: {-avatars.indexOf(player.avatar)*100}px 0;"
           ></div>

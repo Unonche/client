@@ -21,7 +21,7 @@ function submit() {
 	    <input class="input text-lg my-4" type="text" placeholder="Pseudo" bind:value={playerName} />
       <div class="card max-w-md rounded-lg">
 	      <div class="pt-4 font-bold text-center">Choisis ton avatar</div>
-	      <div class="p-2"><AvatarSelector bind:avatar={avatar}></AvatarSelector></div>
+	      <div class="py-2"><AvatarSelector bind:avatar={avatar}></AvatarSelector></div>
       </div>
 	    <button type="button" class="btn btn-lg mt-4 w-full variant-filled-primary" class:opacity-50={!allowed} class:cursor-not-allowed={!allowed} on:click={submit}>Créer la partie</button>
 	  </form>
