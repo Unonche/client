@@ -130,9 +130,9 @@ function onClipboard() {
       <div class="p-4 container flex flex-col items-center" style="max-width: 100%">
         <!-- <img src="logo.png" alt="logo" class="w-3/4 py-4"/> -->
         {#if $gameState.players.size < 2}
-          <span class="px-3 py-1 text-red-500 mb-4 font-bold bg-surface-900 rounded-md text-center shadow">Il faut au moins 2 joueurs pour commencer une partie</span>
+          <span class="px-3 py-1 text-red-500 mb-2 font-bold bg-surface-900 rounded-md text-center shadow">Il faut au moins 2 joueurs pour commencer une partie</span>
         {/if}
-        <div class="w-full md:w-2/4 bg-surface-900 rounded-lg text-center p-4 mb-4 shadow">
+        <div class="w-full md:w-2/4 bg-surface-900 rounded-lg text-center p-4 mb-2 shadow">
           <div class="font-bold mb-2">Invitez des joueurs avec ce lien:</div>
           <div class="flex">
             <div class="card w-full items-center justify-center text-sm px-4 py-2 mr-2 overflow-hidden" style="text-overflow:ellipsis;white-space:nowrap;">{window.location}</div>
@@ -149,7 +149,7 @@ function onClipboard() {
             </button>
           </div>
         </div>
-        <button class="btn {$room.sessionId === $gameState.kingPlayerId ? 'bg-primary-700' : 'bg-primary-500'} mb-4 w-full md:w-2/4 shadow" on:click={() => $isHelpOpen = true}>
+        <button class="btn {$room.sessionId === $gameState.kingPlayerId ? 'bg-primary-700' : 'bg-primary-500'} mb-2 w-full md:w-2/4 shadow" on:click={() => $isHelpOpen = true}>
           <span>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
