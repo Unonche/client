@@ -33,10 +33,14 @@ export class Player extends Container implements GameObject {
   }
 
   createAvatar(): Container {
+    const avatarGroup = new Container();
+
+    if (!scene.avatarSpritesheet?.textures[this.avatarName+'.png']) return avatarGroup;
+
     const avatar = new Graphics()
-      .rect(0, 0, scene.assets[this.avatarName].width, scene.assets[this.avatarName].height)
+      .rect(0, 0, scene.avatarSpritesheet?.textures[this.avatarName+'.png'].width || 100, scene.avatarSpritesheet?.textures[this.avatarName+'.png'].height || 100)
       .fill({ color: '#120b18' })
-      .texture(scene.assets[this.avatarName]);
+      .texture(scene.avatarSpritesheet?.textures[this.avatarName+'.png']);
 
     avatar.width = 100;
     avatar.height = 100;
@@ -49,7 +53,6 @@ export class Player extends Container implements GameObject {
     mask.y = avatar.y;
     avatar.mask = mask;
 
-    const avatarGroup = new Container();
     avatarGroup.addChild(mask);
     avatarGroup.addChild(avatar);
     avatarGroup.pivot.set(avatar.width/2, avatar.height/2);

@@ -1,5 +1,6 @@
 <script>
 import { gameState } from "./stores/colyseus";
+import { avatars } from "./scene/globals"
 </script>
 
 <div class="h-full flex flex-col py-2 bg-surface-700 rounded-lg overflow-auto" style="max-height: 297px;">
@@ -7,8 +8,10 @@ import { gameState } from "./stores/colyseus";
   <ul>
     {#each $gameState.players.values() as player}
       <li class:border-primary-200={player.id === $gameState.currentPlayerId} class:border-transparent={player.id !== $gameState.currentPlayerId} class:bg-primary-800={player.id === $gameState.currentPlayerId} class="border-l-2 px-4 py-1 flex items-center">
-        <div class="relative inline-block mr-2 shrink-0">
-          <img src="avatars/{player.avatar}.png" alt={player.avatar} width="28px" class:grayscale={player.spectator} class="rounded-full bg-surface-900 border-2 {player.id === $gameState.currentPlayerId ? 'border-primary-200' : 'border-surface-700' }"/>
+        <div style="width: 28px; height: 28px;" class="relative inline-block mr-2 shrink-0">
+          <div class:grayscale={player.spectator} class="rounded-full bg-surface-900"
+            style="transform: scale(0.28); transform-origin: 0 0; width:100px; height:100px; background-image: url('avatars.png'); background-position: {-avatars.indexOf(player.avatar)*100}px 0;"
+          ></div>
           {#if player.spectator}
             <span class="badge-icon variant-filled opacity-50 absolute z-10" style="top:-5px; right:-5px; padding:2px;">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">

@@ -3,6 +3,7 @@ import type { Hand } from "./hand";
 import { Scene } from "./scene";
 import atlasData from "../cards-spritesheet.json";
 
+export const avatars = ['chat','fatigue','jesus','magalax','mickey','pepe','rire','zidane'];
 export const cardWidth = 90;
 export const cardHeight = 143;
 

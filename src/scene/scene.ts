@@ -1,4 +1,4 @@
-import { Application, Assets, Container, Graphics, Texture } from "pixi.js";
+import { Application, Assets, Container, Graphics, Spritesheet, Texture } from "pixi.js";
 import gsap from "gsap";
 import { actions, colors, loadCardAssets, scene, screen, self } from "../scene/globals";
 import { Deck } from "../scene/deck";
@@ -8,6 +8,7 @@ import { CardBack, CardFront, type CardData } from "./card";
 import { Player, type PlayerData } from "./player";
 import { Decoration } from "./decoration";
 import { ColorSelector } from "./colorSelector";
+import avatarAtlasData from "../avatars.json";
 
 export class Scene {
   app: Application = new Application();
@@ -19,6 +20,7 @@ export class Scene {
   colorSelector: ColorSelector|null = null;
   players: Map<string, Player> = new Map();
   assets: Record<string, Texture> = {};
+  avatarSpritesheet: Spritesheet|null = null;
   started = false;
   inited = false;
   reversed = false;
@@ -34,11 +36,16 @@ export class Scene {
   }
 
   async loadAssets() {
-    const loadAvatars = async () => await Promise.all([
-      'rire','jesus','magalax','mickey','zidane','fatigue','pepe','chat',
-    ].map(async (str: string) => {
-      this.assets[str] = await Assets.load('avatars/'+str+'.png');
-    }))
+    const loadAvatars = async () => {
+      await Assets.load([
+        avatarAtlasData.meta.image
+      ]);
+      this.avatarSpritesheet = new Spritesheet(
+        Texture.from(avatarAtlasData.meta.image),
+        avatarAtlasData
+      );
+      await this.avatarSpritesheet.parse();
+    }
 
     const font = new FontFace("Quicksand", "url('/fonts/Quicksand-Variable.ttf')", {
       weight: '700'
