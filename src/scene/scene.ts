@@ -63,8 +63,8 @@ export class Scene {
     Object.assign(actions, _actions);
 
     await this.loadAssets();
-    await this.app.init({ width: 1080, height: 1080, canvas, backgroundAlpha: 0, resizeTo: container });
-    this.app.ticker.maxFPS = 42;
+    await this.app.init({ width: 1080, height: 1080, canvas, backgroundAlpha: 0, resizeTo: container, antialias: false });
+    this.app.ticker.maxFPS = 30;
 
     if (this.decoration) this.decoration.destroy();
     this.decoration = new Decoration();

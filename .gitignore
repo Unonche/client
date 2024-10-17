@@ -23,3 +23,5 @@ vite.config.ts.timestamp-*
 
 *.xcf
 *.svg
+*.tps
+static/cards/

@@ -1,7 +1,7 @@
 import { Graphics, Sprite, Text, TextStyle } from "pixi.js";
 
 import type { GameObject } from "./gameObject";
-import { actions, cardHeight, cardTextures, cardWidth, colors, hands, scene, self } from "./globals";
+import { actions, cardHeight, cardSpritesheet, cardWidth, scene, self } from "./globals";
 
 export interface CardData {
   color: string,
@@ -9,14 +9,14 @@ export interface CardData {
 }
 
 export class CardFront extends Sprite implements GameObject {
-  constructor(x, y, angle, color, value, interactive = false) {
-    super(cardTextures[color]);
+  constructor(x: number, y: number, angle: number, color: string, value: string, interactive = false) {
+    super(cardSpritesheet.textures[color+'.png']);
     this.anchor.set(0.5, 0.5);
     this.width = cardWidth;
     this.height = cardHeight;
 
-    const bigShadowDistance = cardTextures[color].height/35;
-    const smallShadowDistance = cardTextures[color].height/70;
+    const bigShadowDistance = this.texture.height/35;
+    const smallShadowDistance = this.texture.height/70;
 
     let text;
 
@@ -26,77 +26,65 @@ export class CardFront extends Sprite implements GameObject {
 
     let img;
     let imgScale = 1;
-    if (['wild', 'draw_four', 'poc', 'luck', 'sleep'].includes(value)) {
-      const sprite = new Sprite(cardTextures['wild_inner']);
-      sprite.anchor.set(0.5, 0.5);
-      sprite.x = 0;
-      sprite.y = 0;
-      sprite.scale = 1;
-      this.addChild(sprite);
-    } 
 
     let bigText;
     if (value === 'poc') {
-      img = cardTextures['poc'];
+      img = cardSpritesheet.textures['poc.png'];
       imgScale = 0.5;
-      const sprite = new Sprite(cardTextures['poc']);
+      const sprite = new Sprite(img);
       sprite.anchor.set(0.5, 0.5);
       sprite.x = 0;
       sprite.y = 0;
-      sprite.scale = 1;
       this.addChild(sprite);
     } else if (value === 'luck') {
-      img = cardTextures['dice'];
+      img = cardSpritesheet.textures['dice.png'];
       imgScale = 0.5;
-      const sprite = new Sprite(cardTextures['dice']);
+      const sprite = new Sprite(img);
       sprite.anchor.set(0.5, 0.5);
       sprite.x = 0;
       sprite.y = 0;
-      sprite.scale = 1;
       this.addChild(sprite);
     }  else if (value === 'sleep') {
-      img = cardTextures['sleep'];
+      img = cardSpritesheet.textures['sleep.png'];
       imgScale = 0.5;
-      const sprite = new Sprite(cardTextures['sleep']);
+      const sprite = new Sprite(img);
       sprite.anchor.set(0.5, 0.5);
       sprite.x = 0;
       sprite.y = 0;
-      sprite.scale = 1;
       this.addChild(sprite);
     } else if (value === 'wild') {
-      img = cardTextures['wild_icon'];
+      img = cardSpritesheet.textures['wild_icon.png'];
     } else if (value === 'draw_two' || value === 'draw_four') {
-      const sprite = new Sprite(cardTextures['draw_two']);
+      const sprite = new Sprite(cardSpritesheet.textures['draw_two.png']);
       sprite.anchor.set(0.5, 0.5);
       sprite.x = 0;
       sprite.y = 0;
-      sprite.scale = 1.3;
       this.addChild(sprite);
     } else if (value === 'skip') {
-      img = cardTextures['skip'];
+      img = cardSpritesheet.textures['skip.png'];
+      imgScale = 0.5;
       const sprite = new Sprite(img);
       sprite.anchor.set(0.5, 0.5);
       sprite.x = 0;
       sprite.y = 0;
-      sprite.scale = 2;
       this.addChild(sprite);
     } else if (value === 'reverse') {
-      img = cardTextures['reverse'];
+      img = cardSpritesheet.textures['reverse.png'];
+      imgScale = 0.5;
       const sprite = new Sprite(img);
       sprite.anchor.set(0.5, 0.5);
       sprite.x = 0;
       sprite.y = 0;
-      sprite.scale = 2;
       this.addChild(sprite);
     } else if (value !== 'wild') {
       const bigStyle = new TextStyle({
         fontFamily: 'Quicksand',
         fontWeight: '700',
-        fontSize: cardTextures[color].height/3,
+        fontSize: this.texture.height/3,
         fill: '#ffffff',
         align: 'center',
         stroke: {
-          width: cardTextures[color].height/30,
+          width: this.texture.height/30,
           color: '#000000'
         },
         dropShadow: {
@@ -113,42 +101,45 @@ export class CardFront extends Sprite implements GameObject {
     }
 
     // Draw bar under number
-    if (bigText && (value == 6 || value == 9)) {
+    if (bigText && (value === '6' || value === '9')) {
       const bigBar = new Graphics()
-      .rect(
-        -bigText.width/2-10 + bigShadowDistance/2,
+      .roundRect(
+        -bigText.width/2+3 + bigShadowDistance/2,
         bigText.height/3 + bigShadowDistance/2,
-        bigText.width,
+        bigText.width/1.4,
         bigText.height/16,
+        3,
       )
       .stroke({
         color: '#000000',
-        width: cardTextures[color].height/40,
+        width: this.texture.height/40,
       })
       .fill('#000000')
-      .rect(
-        -bigText.width/2-10,
+      .roundRect(
+        -bigText.width/2+3,
         bigText.height/3,
-        bigText.width,
+        bigText.width/1.4,
         bigText.height/16,
+        3,
       )
       .stroke({
         color: '#000000',
-        width: cardTextures[color].height/40,
+        width: this.texture.height/40,
       })
       .fill('#ffffff');
       this.addChild(bigBar);
     }
 
     if (img) {
+      const offset = 9;
       const smallSprite = new Sprite(img);
       smallSprite.scale = imgScale;
-      smallSprite.x = -cardTextures[color].width/2+65;
-      smallSprite.y = -cardTextures[color].height/2+65;
+      smallSprite.x = -this.texture.width/2+offset;
+      smallSprite.y = -this.texture.height/2+offset;
       const smallSpriteReversed = new Sprite(img);
       smallSpriteReversed.scale = imgScale;
-      smallSpriteReversed.x = cardTextures[color].width/2-65;
-      smallSpriteReversed.y = cardTextures[color].height/2-65;
+      smallSpriteReversed.x = this.texture.width/2-offset;
+      smallSpriteReversed.y = this.texture.height/2-offset;
       smallSpriteReversed.rotation = Math.PI;
       this.addChild(smallSprite);
       this.addChild(smallSpriteReversed);
@@ -156,11 +147,11 @@ export class CardFront extends Sprite implements GameObject {
       const smallStyle = new TextStyle({
         fontFamily: 'Quicksand',
         fontWeight: '700',
-        fontSize: cardTextures[color].height/7,
+        fontSize: this.texture.height/7,
         fill: '#ffffff',
         align: 'center',
         stroke: {
-          width: cardTextures[color].height/60,
+          width: this.texture.height/60,
           color: '#000000'
         },
         dropShadow: {
@@ -170,38 +161,38 @@ export class CardFront extends Sprite implements GameObject {
         },
       });
       const smallText = new Text({ text, style: smallStyle });
-      smallText.x = 60-cardTextures[color].width/2;
-      smallText.y = 40-cardTextures[color].height/2;
+      smallText.x = 8-this.texture.width/2;
+      smallText.y = 6-this.texture.height/2;
       this.addChild(smallText);
 
       const smallTextReversed = new Text({ text, style: smallStyle });
       smallTextReversed.rotation = Math.PI;
-      smallTextReversed.x = -60+cardTextures[color].width/2; // Center in the card
-      smallTextReversed.y = -40+cardTextures[color].height/2; // Center in the card
+      smallTextReversed.x = -8+this.texture.width/2; // Center in the card
+      smallTextReversed.y = -6+this.texture.height/2; // Center in the card
       this.addChild(smallTextReversed);
 
-      if (bigText && (value == 6 || value == 9)) {
+      if (bigText && (value === '6' || value === '9')) {
         const smallBar = new Graphics()
         .rect(
-          65-cardTextures[color].width/2 + smallShadowDistance/2,
-          40-cardTextures[color].height/2+smallText.height/1.2 + smallShadowDistance/2,
-          smallText.width/1.2,
+          9-this.texture.width/2 + smallShadowDistance/2,
+          6-this.texture.height/2+smallText.height/1.2 + smallShadowDistance/2,
+          smallText.width/1.4,
           smallText.height/16,
         )
         .stroke({
           color: '#000000',
-          width: cardTextures[color].height/60,
+          width: this.texture.height/60,
         })
         .fill('#000000')
         .rect(
-          65-cardTextures[color].width/2,
-          40-cardTextures[color].height/2+smallText.height/1.2,
-          smallText.width/1.2,
+          9-this.texture.width/2,
+          6-this.texture.height/2+smallText.height/1.2,
+          smallText.width/1.4,
           smallText.height/16,
         )
         .stroke({
           color: '#000000',
-          width: cardTextures[color].height/60,
+          width: this.texture.height/60,
         })
         .fill('#ffffff');
 
@@ -222,18 +213,18 @@ export class CardFront extends Sprite implements GameObject {
       this.cursor = 'pointer';
 
       const onHover = () => {
-        const cardIndex = scene.players.get(self.id).hand.cards.findIndex(c => c === this);
-        scene.players.get(self.id).hand.setFocus(cardIndex);
-        scene.players.get(self.id).hand.update();
+        const cardIndex = scene.players.get(self.id)?.hand.cards.findIndex(c => c === this);
+        scene.players.get(self.id)?.hand.setFocus(cardIndex);
+        scene.players.get(self.id)?.hand.update();
       }
       const onOut = () => {
-        scene.players.get(self.id).hand.setFocus(null);
-        scene.players.get(self.id).hand.update();
+        scene.players.get(self.id)?.hand.setFocus(null);
+        scene.players.get(self.id)?.hand.update();
       }
       const onClick = () => {
-        const cardIndex = scene.players.get(self.id).hand.cards.findIndex(c => c === this);
+        const cardIndex = scene.players.get(self.id)?.hand.cards.findIndex(c => c === this);
 
-        if (cardIndex >= 0) {
+        if (cardIndex !== undefined && cardIndex >= 0) {
           if (color === 'wild') actions.preplayWild(cardIndex);
           else actions.playCard(cardIndex);
         }
@@ -253,7 +244,7 @@ export class CardFront extends Sprite implements GameObject {
 
 export class CardBack extends Sprite implements GameObject {
   constructor(x, y, angle) {
-    super(cardTextures.back);
+    super(cardSpritesheet.textures['back.png']);
     this.width = cardWidth;
     this.height = cardHeight;
     this.anchor.set(0.5, 0.5);

@@ -1,32 +1,17 @@
-import { Assets, type Texture } from "pixi.js";
+import { Assets, Spritesheet, Texture } from "pixi.js";
 import type { Hand } from "./hand";
 import { Scene } from "./scene";
+import atlasData from "../cards-spritesheet.json";
 
 export const cardWidth = 90;
-export const cardHeight = 143.18;
+export const cardHeight = 143;
 
 export const self = {
   id: ''
 };
 
 export const scene = new Scene();
-export let cardTexturesLoaded = false;
-export const cardTextures: Record<string, Texture|null> = {
-  back: null,
-  red: null,
-  green: null,
-  blue: null,
-  yellow: null,
-  wild: null,
-  draw_two: null,
-  skip: null,
-  reverse: null,
-  poc: null,
-  wild_inner: null,
-  wild_icon: null,
-  dice: null,
-  sleep: null,
-}
+export let cardSpritesheet: Spritesheet;
 export const hands: Record<string, Hand> = {};
 export const screen: Record<string, boolean> = {
   isMicro: false,
@@ -44,11 +29,16 @@ export const colors: Record<string, string> = {
 export const actions = {};
 
 export async function loadCardAssets() {
-  if (cardTexturesLoaded) return;
+  if (cardSpritesheet) return;
 
-  await Promise.all(Object.keys(cardTextures).map(async (textureName) => {
-    cardTextures[textureName] = await Assets.load('cards/'+textureName+'.png');
-  }))
+  await Assets.load([
+    atlasData.meta.image
+  ]);
 
-  cardTexturesLoaded = true;
+  cardSpritesheet = new Spritesheet(
+    Texture.from(atlasData.meta.image),
+    atlasData
+  );
+
+  await cardSpritesheet.parse();
 }
