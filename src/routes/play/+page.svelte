@@ -1,20 +1,25 @@
 <script lang="ts">
 import { getDrawerStore } from "@skeletonlabs/skeleton";
 import type { DrawerSettings } from "@skeletonlabs/skeleton";
-import { gameState } from "../../stores/colyseus";
+import { gameState, leaveRoom } from "../../stores/colyseus";
+import { onDestroy, onMount } from "svelte";
 import Help from "../../help.svelte";
 import LeftMenu from "../../leftMenu.svelte";
 import Table from "../../table.svelte";
 import { isHelpOpen } from "../../stores/store";
 
-import JoinRoom from "../../joinRoom.svelte";
+import JoinForm from "../../joinForm.svelte";
 
 const leftDrawerSettings: DrawerSettings = { id: 'left-menu' };
 const drawerStore = getDrawerStore();
+
+onDestroy(() => {
+  leaveRoom();
+});
 </script>
 
 {#if !$gameState}
-  <JoinRoom></JoinRoom>
+  <JoinForm creating={false}></JoinForm>
 {:else}
   <div class="w-screen h-screen flex">
     <div class="md:w-1/3 lg:w-1/4 hidden md:block">

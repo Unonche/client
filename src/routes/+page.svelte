@@ -2,27 +2,6 @@
     <title>Unonche</title> 
 </svelte:head>
 
-<script lang="ts">
-import Home from '../home.svelte';
-import CreateRoom from '../createRoom.svelte';
-import JoinRoom from '../joinRoom.svelte';
-import Game from '../game.svelte';
-import { room, leaveRoom } from "../stores/colyseus";
-import { onDestroy, onMount } from "svelte";
-import { goto } from "$app/navigation";
-
-onDestroy(() => {
-  leaveRoom();
-});
-
-let roomId: string|null = null;
-
-onMount(() => {
-	const url = new URL(window.location.href);
-	roomId = url.searchParams.get('room');
-});
-</script>
-
 <div class="p-4 flex items-center justify-center w-full min-h-screen">
   <div class="w-full md:w-2/4 lg:w-1/4 flex flex-col">
     <img src="logo.png" alt="logo" class="w-auto h-28 mx-auto"/>
