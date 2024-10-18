@@ -33,11 +33,11 @@ export async function loadCardAssets() {
   if (cardSpritesheet) return;
 
   await Assets.load([
-    atlasData.meta.image
+    '/'+atlasData.meta.image
   ]);
 
   cardSpritesheet = new Spritesheet(
-    Texture.from(atlasData.meta.image),
+    Texture.from('/'+atlasData.meta.image),
     atlasData
   );
 

@@ -38,10 +38,10 @@ export class Scene {
   async loadAssets() {
     const loadAvatars = async () => {
       await Assets.load([
-        avatarAtlasData.meta.image
+        '/'+avatarAtlasData.meta.image
       ]);
       this.avatarSpritesheet = new Spritesheet(
-        Texture.from(avatarAtlasData.meta.image),
+        Texture.from('/'+avatarAtlasData.meta.image),
         avatarAtlasData
       );
       await this.avatarSpritesheet.parse();
@@ -53,9 +53,9 @@ export class Scene {
 
     await Promise.all([
       font.load(),
-      (async () => this.assets['radialgradient'] = await Assets.load('radialgradient.png'))(),
-      (async () => this.assets['spiral'] = await Assets.load('spiral.png'))(),
-      (async () => this.assets['unonchebtn'] = await Assets.load('unonchebtn.png'))(),
+      (async () => this.assets['radialgradient'] = await Assets.load('/radialgradient.png'))(),
+      (async () => this.assets['spiral'] = await Assets.load('/spiral.png'))(),
+      (async () => this.assets['unonchebtn'] = await Assets.load('/unonchebtn.png'))(),
       loadAvatars(),
       loadCardAssets()
     ])

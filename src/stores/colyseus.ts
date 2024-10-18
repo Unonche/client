@@ -12,7 +12,7 @@ export const chatMessages = writable([]);
 export const gameState: Writable<object|null> = writable(null);
 
 const afterJoin = async (r: Room) => {
-  goto(`?room=${r.roomId}`);
+  goto(`/play?room=${r.roomId}`);
 
   addDefaultListeners(r);
 }
