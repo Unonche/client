@@ -1,3 +1,7 @@
+<svelte:head>
+    <title>Unonche</title> 
+</svelte:head>
+
 <script lang="ts">
 import { getDrawerStore } from "@skeletonlabs/skeleton";
 import type { DrawerSettings } from "@skeletonlabs/skeleton";
