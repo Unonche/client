@@ -1,4 +1,4 @@
-import { Application, Assets, Container, Graphics, Spritesheet, Texture } from "pixi.js";
+import { Application, Assets, Container, Spritesheet, Texture, type TickerCallback } from "pixi.js";
 import gsap from "gsap";
 import { actions, colors, loadCardAssets, scene, screen, self } from "../scene/globals";
 import { Deck } from "../scene/deck";
@@ -10,6 +10,17 @@ import { Decoration } from "./decoration";
 import { ColorSelector } from "./colorSelector";
 import avatarAtlasData from "../avatars.json";
 
+interface Sound {
+  play: CallableFunction;
+}
+
+type EventQueueItem = {
+  type: string;
+  cardData: CardData|null;
+  playerId: string;
+  data: Record<string, number|string|object>;
+}
+
 export class Scene {
   app: Application = new Application();
   mainContainer: Container = new Container();
@@ -20,10 +31,23 @@ export class Scene {
   colorSelector: ColorSelector|null = null;
   players: Map<string, Player> = new Map();
   assets: Record<string, Texture> = {};
+  sounds: Record<string, Sound> = {};
   avatarSpritesheet: Spritesheet|null = null;
   started = false;
   inited = false;
   reversed = false;
+  eventQueue: EventQueueItem[] = [];
+  eventQueueTicker: TickerCallback<Promise<void>>;
+
+  constructor() {
+    this.eventQueueTicker = async () => {
+      if (this.eventQueue.length > 0) {
+        scene.app.ticker.remove(this.eventQueueTicker);
+        await this.execQueue();
+        scene.app.ticker.add(this.eventQueueTicker);
+      }
+    }
+  }
 
   get width() {
     return this.app.screen.width;
@@ -36,6 +60,7 @@ export class Scene {
   }
 
   async loadAssets() {
+    await import("@pixi/sound");
     const loadAvatars = async () => {
       await Assets.load([
         '/'+avatarAtlasData.meta.image
@@ -56,19 +81,21 @@ export class Scene {
       (async () => this.assets['radialgradient'] = await Assets.load('/radialgradient.png'))(),
       (async () => this.assets['spiral'] = await Assets.load('/spiral.png'))(),
       (async () => this.assets['unonchebtn'] = await Assets.load('/unonchebtn.png'))(),
+      (async () => this.sounds['card'] = await Assets.load('/card.mp3'))(),
       loadAvatars(),
       loadCardAssets()
     ])
+
     document.fonts.add(font);
   }
 
-
   async init(canvas: HTMLCanvasElement, container: HTMLElement, _selfId: string, _actions: Record<string, CallableFunction>) {
-    if (this.inited) return;
-
     self.id = _selfId;
     Object.assign(actions, _actions);
 
+    this.reset();
+
+    this.app = new Application();
     await this.loadAssets();
     await this.app.init({ width: 1080, height: 1080, canvas, backgroundAlpha: 0, resizeTo: container, antialias: false });
     this.app.ticker.maxFPS = 30;
@@ -88,6 +115,9 @@ export class Scene {
     window.addEventListener('resize', debounce(resize, 500));
 
     resize();
+
+    scene.app.ticker.add(this.eventQueueTicker);
+
     this.inited = true;
   }
 
@@ -119,6 +149,37 @@ export class Scene {
     this.players.get(currentPlayerId)?.startTimer(turnStartTime);
   }
 
+  async execQueue() {
+    const item = this.eventQueue.shift();
+    if (!item || !this.deck) return;
+
+    const { type, cardData, playerId, data } = item;
+
+    if (type === 'draw') {
+      const player = this.players.get(playerId);
+      if (!player) return;
+
+      let card;
+      if (playerId === self.id && cardData) {
+        card = new CardFront(this.deck.x, this.deck.y, this.deck.rotation, cardData.color, cardData.value, true);
+      } else {
+        card = new CardBack(this.deck.x, this.deck.y, this.deck.rotation);
+      }
+
+      player.hand.addCard(card);
+      this.deck.setDeckSize(this.deck.deckSize-1);
+      this.deck.update();
+      this.sounds['card']?.play();
+    } else if (type === 'play' && cardData) {
+      this.playCard(playerId, Number(data['cardIndex']), cardData, String(data['nextColor']));
+    }
+
+    if (this.eventQueue.length > 0) {
+      await sleep(300);
+      await this.execQueue();
+    }
+  }
+
   reset() {
     gsap.exportRoot().kill();
     this.decoration?.reset();
@@ -130,7 +191,6 @@ export class Scene {
     this.started = false;
     this.reversed = false;
   }
-
 
   updateAll(animate = true) {
     for (const player of this.players.values()) {
@@ -146,11 +206,7 @@ export class Scene {
     if (this.unoBtn) this.unoBtn.update();
   }
 
-  // EVENTS
-
-  onPlayCard(playerId: string, cardIndex: number, cardData: CardData, nextColor: string) {
-    this.colorSelector?.destroy();
-
+  playCard(playerId: string, cardIndex: number, cardData: CardData, nextColor: string) {
     const player = this.players.get(playerId);
     if (!player) return;
 
@@ -179,11 +235,24 @@ export class Scene {
 
     existingCard.destroy();
 
+    this.sounds['card']?.play();
+
     if (cardData.value === 'reverse') this.reversed = !this.reversed;
 
     const color = cardData.color === 'wild' ? colors[nextColor] : colors[cardData.color];
     if (this.decoration) this.decoration.setColor(color);
     if (this.unoBtn) this.unoBtn.setColor(color);
+  }
+
+  // EVENTS
+
+  onPlayCard(playerId: string, cardIndex: number, cardData: CardData, nextColor: string) {
+    this.colorSelector?.destroy();
+
+    const player = this.players.get(playerId);
+    if (!player) return;
+
+    this.eventQueue.push({ type: 'play', cardData, playerId, data: { cardIndex, nextColor } });
   }
   onChooseColor(cardIndex: number) {
     this.colorSelector?.destroy();
@@ -192,25 +261,9 @@ export class Scene {
   async onDrawCards(playerId: string, cardsData: CardData[]|null, cardsAmount: number) {
     if (!this.deck) return;
 
-    const player = this.players.get(playerId);
-    if (!player) return;
-
-    // Draw the cards one by one
     for (let i = 0; i < cardsAmount; i++) {
-      let card;
       const cardData = cardsData ? cardsData[i] : null;
-      if (playerId === self.id && cardData) {
-        card = new CardFront(this.deck.x, this.deck.y, this.deck.rotation, cardData.color, cardData.value, true);
-      } else {
-        card = new CardBack(this.deck.x, this.deck.y, this.deck.rotation);
-      }
-
-      player.hand.addCard(card);
-      this.deck.setDeckSize(this.deck.deckSize-1);
-      this.deck.update();
-      if (i < cardsAmount-1) {
-        await sleep(400);
-      }
+      this.eventQueue.push({ type: 'draw', cardData, playerId, data: {}});
     }
   }
   onNewTurn(playerId: string, startTime: number) {

@@ -37,6 +37,7 @@
   "type": "module",
   "dependencies": {
     "@floating-ui/dom": "^1.6.11",
+    "@pixi/sound": "^6.0.1",
     "@tsparticles/confetti": "^3.5.0",
     "colyseus.js": "^0.15.26",
     "gsap": "^3.12.5",
