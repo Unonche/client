@@ -238,7 +238,7 @@ export class Player extends Container implements GameObject {
       this.avatar.width = 50;
       this.avatar.height = 50;
       const sideOffset = this.id === self.id ? -100 : 0;
-      const offset = this.id === self.id ? 20 : (screen.isMicro && scene.playerIds.length > 3 ? -70 : 0);
+      const offset = this.id === self.id ? 0 : (screen.isMicro && scene.playerIds.length > 3 ? -60 : 0);
       this.avatar.x = pos.x-Math.cos(angle)*(260+offset)+Math.cos(angle+Math.PI/2)*sideOffset;
       this.avatar.y = pos.y-Math.sin(angle)*(260+offset)+Math.sin(angle+Math.PI/2)*sideOffset;
     } else {

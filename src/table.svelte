@@ -3,6 +3,7 @@ import { onMount } from 'svelte';
 import { getToastStore, clipboard } from '@skeletonlabs/skeleton';
 import { scene } from "./scene/globals";
 import { room, gameState, addDefaultListeners, getNonSpectatorPlayers } from "./stores/colyseus";
+import { goto } from "$app/navigation";
 import { isHelpOpen } from './stores/store';
 import Win from './win.svelte';
 import { confetti } from "@tsparticles/confetti";
@@ -40,7 +41,8 @@ onMount(async () => {
   $room.removeAllListeners();
   addDefaultListeners($room);
 
-  $room.onLeave(() => {
+  $room.onLeave(async () => {
+    await goto('/');
 		toastStore.trigger({
 			message: 'Déconnecté de la partie',
 			background: 'variant-filled-error',
