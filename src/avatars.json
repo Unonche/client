@@ -56,7 +56,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":100,"h":100},
 	"sourceSize": {"w":100,"h":100}
 },
-"pepe.png":
+"notready.png":
 {
 	"frame": {"x":700,"y":0,"w":100,"h":100},
 	"rotated": false,
@@ -64,7 +64,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":100,"h":100},
 	"sourceSize": {"w":100,"h":100}
 },
-"rire.png":
+"pepe.png":
 {
 	"frame": {"x":800,"y":0,"w":100,"h":100},
 	"rotated": false,
@@ -72,7 +72,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":100,"h":100},
 	"sourceSize": {"w":100,"h":100}
 },
-"trapvador.png":
+"rire.png":
 {
 	"frame": {"x":900,"y":0,"w":100,"h":100},
 	"rotated": false,
@@ -80,9 +80,17 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":100,"h":100},
 	"sourceSize": {"w":100,"h":100}
 },
-"zidane.png":
+"trapvador.png":
 {
 	"frame": {"x":1000,"y":0,"w":100,"h":100},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":100,"h":100},
+	"sourceSize": {"w":100,"h":100}
+},
+"zidane.png":
+{
+	"frame": {"x":1100,"y":0,"w":100,"h":100},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":100,"h":100},
@@ -93,8 +101,8 @@
 	"version": "1.1",
 	"image": "avatars.png",
 	"format": "RGBA8888",
-	"size": {"w":1100,"h":100},
+	"size": {"w":1200,"h":100},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:a6404e977ca308746d9ee49affafc64e:2ab5776721cc8f7f0f4f44809611ee4f:faac5bc2578b98332342aabac113e789$"
+	"smartupdate": "$TexturePacker:SmartUpdate:200a09a680e1df638822c4ce0d514e41:267523610dd94c50736343bff87de715:faac5bc2578b98332342aabac113e789$"
 }
 }
