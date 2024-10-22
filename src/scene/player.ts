@@ -62,8 +62,8 @@ export class Player extends Container implements GameObject {
 
   getPosition() {
     const selfOffset = screen.isMobile ? -100 : 60;
-    const offset = screen.isMobile ? -150 : 60;
-    const cornerOffset = screen.isMobile ? offset+80 : offset;
+    const offset = screen.isMobile ? (screen.isMicro ? 40 : -150) : 60;
+    const cornerOffset = screen.isMobile ? (screen.isMicro ? 40 : offset+80) : offset;
 
     let orderedPlayersArray;
     if (scene.playerIds.includes(self.id)) {
@@ -79,7 +79,80 @@ export class Player extends Container implements GameObject {
     }
     if (playerI === 0) return {
       x: scene.width/2,
-      y: scene.height-selfOffset
+      y: scene.height-(screen.isMicro && orderedPlayersArray[0] !== self.id ? offset : selfOffset)
+    }
+    if (screen.isMicro) {
+      switch (scene.players.size) {
+        case 2:
+          return {
+            x: scene.width/2,
+            y: offset
+          }
+        case 3:
+          if (playerI === 1) return {
+            x: cornerOffset,
+            y: cornerOffset
+          }
+          if (playerI === 2) return {
+            x: scene.width-cornerOffset,
+            y: cornerOffset
+          }
+          return defaultPos;
+      case 4:
+        if (playerI === 1) return {
+          x: cornerOffset,
+          y: cornerOffset
+        }
+        if (playerI === 2) return {
+          x: scene.width/2,
+          y: offset
+        }
+        if (playerI === 3) return {
+          x: scene.width-cornerOffset,
+          y: cornerOffset
+        }
+        return defaultPos;
+      case 5:
+        if (playerI === 1) return {
+          x: cornerOffset,
+          y: cornerOffset
+        }
+        if (playerI === 2) return {
+          x: (scene.width-2*cornerOffset)*(1/3)+cornerOffset,
+          y: offset
+        }
+        if (playerI === 3) return {
+          x: (scene.width-2*cornerOffset)*(2/3)+cornerOffset,
+          y: offset
+        }
+        if (playerI === 4) return {
+          x: scene.width-cornerOffset,
+          y: cornerOffset
+        }
+        return defaultPos;
+      case 6:
+        if (playerI === 1) return {
+          x: cornerOffset,
+          y: cornerOffset
+        }
+        if (playerI === 2) return {
+          x: (scene.width-2*cornerOffset)*(1/4)+cornerOffset,
+          y: offset
+        }
+        if (playerI === 3) return {
+          x: (scene.width-2*cornerOffset)*(2/4)+cornerOffset,
+          y: offset
+        }
+        if (playerI === 4) return {
+          x: (scene.width-2*cornerOffset)*(3/4)+cornerOffset,
+          y: offset
+        }
+        if (playerI === 5) return {
+          x: scene.width-cornerOffset,
+          y: cornerOffset
+        }
+        return defaultPos;
+      }
     }
 
     switch (scene.players.size) {
@@ -241,6 +314,12 @@ export class Player extends Container implements GameObject {
       const offset = this.id === self.id ? 0 : (screen.isMicro && scene.playerIds.length > 3 ? -60 : 0);
       this.avatar.x = pos.x-Math.cos(angle)*(260+offset)+Math.cos(angle+Math.PI/2)*sideOffset;
       this.avatar.y = pos.y-Math.sin(angle)*(260+offset)+Math.sin(angle+Math.PI/2)*sideOffset;
+      if (screen.isMicro) {
+        const o = this.id === self.id ? -270 : 0;
+        const u = this.id === self.id ? scene.width/2-50 : 0;
+        this.avatar.x = pos.x + u;
+        this.avatar.y = pos.y + o;
+      }
     } else {
       this.avatar.width = 100;
       this.avatar.height = 100;

@@ -84,10 +84,16 @@ export class Hand extends Container implements GameObject {
           rotation: cardAngle,
           ease: "power1.inOut",
         });
+        gsap.to(card, {
+          duration: 0.2,
+          alpha: screen.isMicro ? (this.playerId === self.id ? 1 : 0) : 1,
+          ease: "power1.inOut",
+        });
       } else {
         card.position.x = x;
         card.position.y = y;
         card.rotation = cardAngle;
+        card.alpha = screen.isMicro ? (this.playerId === self.id ? 1 : 0) : 1;
       }
     }
   }

@@ -69,7 +69,7 @@ export class UnoncheButton extends Sprite implements GameObject {
   update() {
     if (!this.position) return;
 
-    if (screen.isHorizontal || scene.playerIds.length <= 3) {
+    if ((screen.isHorizontal || scene.playerIds.length <= 3) && !screen.isMicro) {
       this.x = scene.width/2+200;
       this.y = scene.height/2;
     } else {

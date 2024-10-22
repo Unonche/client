@@ -71,14 +71,20 @@ export class Deck extends Container implements GameObject {
     if (!this.position) return;
 
     this.draw();
-    if (screen.isHorizontal || scene.playerIds.length <= 3) {
-      this.x = scene.width/2 - 186;
-      this.y = scene.height/2;
-      this.rotation = 0;
+    if (screen.isMicro) {
+      this.x = scene.width/2 - 126;
+      this.y = scene.height/2 - 86;
+      this.rotation = Math.PI/4;
     } else {
-      this.x = scene.width/2;
-      this.y = scene.height/2 + 160;
-      this.rotation = Math.PI/2;
+      if (screen.isHorizontal || scene.playerIds.length <= 3) {
+        this.x = scene.width/2 - 186;
+        this.y = scene.height/2;
+        this.rotation = 0;
+      } else {
+        this.x = scene.width/2;
+        this.y = scene.height/2 + 160;
+        this.rotation = Math.PI/2;
+      }
     }
     this.alpha = this.deckSize <= 0 ? 0 : 1;
   }
