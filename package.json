@@ -37,11 +37,10 @@
   "type": "module",
   "dependencies": {
     "@floating-ui/dom": "^1.6.11",
-    "@pixi/sound": "^6.0.1",
+    "@pixi/sound": "^4.4.1",
     "@tsparticles/confetti": "^3.5.0",
     "colyseus.js": "^0.15.26",
     "gsap": "^3.12.5",
-    "pixi.js": "^8.4.1",
-    "short-unique-id": "^5.2.0"
+    "pixi.js-legacy": "^6.5.10"
   }
 }

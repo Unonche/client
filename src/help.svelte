@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Application } from "pixi.js";
+import { Application } from "pixi.js-legacy";
 import { onMount } from "svelte";
 import { CardFront } from "./scene/card";
 import { cardHeight, loadCardAssets, cardWidth } from "./scene/globals";
@@ -29,11 +29,9 @@ const cards = [
 
 async function init() {
   const els: HTMLCanvasElement[] = [drawTwo, reverse, skip, wild, drawFour, poc, sleep, luck];
-  await loadCardAssets();
   for (let i = 0; i < els.length; i++) {
     const cardData = cards[i];
-    const app = new Application();
-    await app.init({ width, height, canvas: els[i], backgroundAlpha: 0 });
+    const app = new Application({ width, height, view: els[i], backgroundAlpha: 0 });
     const card = new CardFront(width/2, height/2, 0, cardData.color, cardData.value, false);
     card.width = width;
     card.height = height;

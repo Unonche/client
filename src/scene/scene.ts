@@ -1,4 +1,4 @@
-import { Application, Assets, Container, Spritesheet, Texture, type TickerCallback } from "pixi.js";
+import { Application, Container, Spritesheet, Texture, type TickerCallback, utils } from "pixi.js-legacy";
 import gsap from "gsap";
 import { actions, colors, loadCardAssets, scene, screen, self } from "../scene/globals";
 import { Deck } from "../scene/deck";
@@ -8,7 +8,6 @@ import { CardBack, CardFront, type CardData } from "./card";
 import { Player, type PlayerData } from "./player";
 import { Decoration } from "./decoration";
 import { ColorSelector } from "./colorSelector";
-import avatarAtlasData from "../avatars.json";
 
 interface Sound {
   play: CallableFunction;
@@ -22,7 +21,7 @@ type EventQueueItem = {
 }
 
 export class Scene {
-  app: Application = new Application();
+  app: Application|null = null;
   mainContainer: Container = new Container();
   disposePile: Container = new Container();
   deck: Deck|null = null;
@@ -41,18 +40,22 @@ export class Scene {
 
   constructor() {
     this.eventQueueTicker = async () => {
+      if (!this.app) return;
+
       if (this.eventQueue.length > 0) {
-        scene.app.ticker.remove(this.eventQueueTicker);
+        this.app.ticker.remove(this.eventQueueTicker);
         await this.execQueue();
-        scene.app.ticker.add(this.eventQueueTicker);
+        this.app.ticker.add(this.eventQueueTicker);
       }
     }
   }
 
   get width() {
+    if (!this.app) return 0;
     return this.app.screen.width;
   }
   get height() {
+    if (!this.app) return 0;
     return this.app.screen.height;
   }
   get playerIds() {
@@ -60,30 +63,21 @@ export class Scene {
   }
 
   async loadAssets() {
-    await import("@pixi/sound");
-    const loadAvatars = async () => {
-      await Assets.load([
-        '/'+avatarAtlasData.meta.image
-      ]);
-      this.avatarSpritesheet = new Spritesheet(
-        Texture.from('/'+avatarAtlasData.meta.image),
-        avatarAtlasData
-      );
-      await this.avatarSpritesheet.parse();
-    }
+    const { Sound } = await import("@pixi/sound");
 
     const font = new FontFace("Quicksand", "url('/fonts/Quicksand-Variable.ttf')", {
       weight: '700'
     });
+    scene.app?.loader.add('avatarSpritesheet', '/avatars.json');
+    if (scene.app) loadCardAssets(scene.app);
+
+    this.sounds['card'] = Sound.from('/card.mp3');
 
     await Promise.all([
       font.load(),
-      (async () => this.assets['radialgradient'] = await Assets.load('/radialgradient.png'))(),
-      (async () => this.assets['spiral'] = await Assets.load('/spiral.png'))(),
-      (async () => this.assets['unonchebtn'] = await Assets.load('/unonchebtn.png'))(),
-      (async () => this.sounds['card'] = await Assets.load('/card.mp3'))(),
-      loadAvatars(),
-      loadCardAssets()
+      new Promise((resolve) => {
+        scene.app?.loader.load(resolve);
+      })
     ])
 
     document.fonts.add(font);
@@ -95,10 +89,11 @@ export class Scene {
 
     this.reset();
 
-    this.app = new Application();
-    await this.loadAssets();
-    await this.app.init({ width: 1080, height: 1080, canvas, backgroundAlpha: 0, resizeTo: container, antialias: false });
+    this.app = new Application({ width: 1080, height: 1080, view: canvas, backgroundAlpha: 0, resizeTo: container, antialias: false, forceCanvas: !utils.isWebGLSupported() });
+    console.log(this.app.renderer)
     this.app.ticker.maxFPS = 30;
+
+    await this.loadAssets();
 
     if (this.decoration) this.decoration.destroy();
     this.decoration = new Decoration();
@@ -116,7 +111,7 @@ export class Scene {
 
     resize();
 
-    scene.app.ticker.add(this.eventQueueTicker);
+    this.app?.ticker.add(this.eventQueueTicker);
 
     this.inited = true;
   }
@@ -135,6 +130,7 @@ export class Scene {
     }
 
     this.deck = new Deck(deckSize);
+    this.app?.stage.addChild(this.deck);
     this.unoBtn = new UnoncheButton();
 
     this.players.clear();
@@ -197,7 +193,7 @@ export class Scene {
       player.update(animate);
     }
 
-    if (this.disposePile && this.disposePile.position) {
+    if (this.disposePile && this.disposePile.transform) {
       this.disposePile.position.x = this.width/2;
       this.disposePile.position.y = this.height/2;
     }

@@ -1,7 +1,7 @@
-import { Graphics, Sprite, Text, TextStyle } from "pixi.js";
+import { Texture, Graphics, Sprite, Text, TextStyle } from "pixi.js-legacy";
 
 import type { GameObject } from "./gameObject";
-import { actions, cardHeight, cardSpritesheet, cardWidth, scene, self } from "./globals";
+import { actions, cardHeight, cardWidth, scene, self } from "./globals";
 
 export interface CardData {
   color: string,
@@ -10,7 +10,7 @@ export interface CardData {
 
 export class CardFront extends Sprite implements GameObject {
   constructor(x: number, y: number, angle: number, color: string, value: string, interactive = false) {
-    super(cardSpritesheet.textures[color+'.png']);
+    super(Texture.from(color+'.png'));
     this.anchor.set(0.5, 0.5);
     this.width = cardWidth;
     this.height = cardHeight;
@@ -29,7 +29,7 @@ export class CardFront extends Sprite implements GameObject {
 
     let bigText;
     if (value === 'poc') {
-      img = cardSpritesheet.textures['poc.png'];
+      img = Texture.from('poc.png');
       imgScale = 0.5;
       const sprite = new Sprite(img);
       sprite.anchor.set(0.5, 0.5);
@@ -37,7 +37,7 @@ export class CardFront extends Sprite implements GameObject {
       sprite.y = 0;
       this.addChild(sprite);
     } else if (value === 'luck') {
-      img = cardSpritesheet.textures['dice.png'];
+      img = Texture.from('dice.png');
       imgScale = 0.5;
       const sprite = new Sprite(img);
       sprite.anchor.set(0.5, 0.5);
@@ -45,7 +45,7 @@ export class CardFront extends Sprite implements GameObject {
       sprite.y = 0;
       this.addChild(sprite);
     }  else if (value === 'sleep') {
-      img = cardSpritesheet.textures['sleep.png'];
+      img = Texture.from('sleep.png');
       imgScale = 0.5;
       const sprite = new Sprite(img);
       sprite.anchor.set(0.5, 0.5);
@@ -53,15 +53,15 @@ export class CardFront extends Sprite implements GameObject {
       sprite.y = 0;
       this.addChild(sprite);
     } else if (value === 'wild') {
-      img = cardSpritesheet.textures['wild_icon.png'];
+      img = Texture.from('wild_icon.png');
     } else if (value === 'draw_two' || value === 'draw_four') {
-      const sprite = new Sprite(cardSpritesheet.textures['draw_two.png']);
+      const sprite = new Sprite(Texture.from('draw_two.png'));
       sprite.anchor.set(0.5, 0.5);
       sprite.x = 0;
       sprite.y = 0;
       this.addChild(sprite);
     } else if (value === 'skip') {
-      img = cardSpritesheet.textures['skip.png'];
+      img = Texture.from('skip.png');
       imgScale = 0.5;
       const sprite = new Sprite(img);
       sprite.anchor.set(0.5, 0.5);
@@ -69,7 +69,7 @@ export class CardFront extends Sprite implements GameObject {
       sprite.y = 0;
       this.addChild(sprite);
     } else if (value === 'reverse') {
-      img = cardSpritesheet.textures['reverse.png'];
+      img = Texture.from('reverse.png');
       imgScale = 0.5;
       const sprite = new Sprite(img);
       sprite.anchor.set(0.5, 0.5);
@@ -83,17 +83,14 @@ export class CardFront extends Sprite implements GameObject {
         fontSize: this.texture.height/3,
         fill: '#ffffff',
         align: 'center',
-        stroke: {
-          width: this.texture.height/30,
-          color: '#000000'
-        },
-        dropShadow: {
-          angle: Math.PI/4,
-          distance: bigShadowDistance,
-          color: '#000000'
-        },
+        stroke: '#000000',
+        strokeThickness: this.texture.height/30,
+        dropShadow: true,
+        dropShadowAngle: Math.PI/4,
+        dropShadowDistance: bigShadowDistance,
+        dropShadowColor: '#000000',
       });
-      bigText = new Text({ text, style: bigStyle });
+      bigText = new Text(text, bigStyle);
       bigText.anchor.set(0.5, 0.5);
       bigText.x = 0;
       bigText.y = 0;
@@ -102,42 +99,39 @@ export class CardFront extends Sprite implements GameObject {
 
     // Draw bar under number
     if (bigText && (value === '6' || value === '9')) {
-      const bigBar = new Graphics()
-      .roundRect(
+      const bigBar = new Graphics();
+      bigBar.lineStyle(this.texture.height/60, 0x000000, 1);
+      bigBar.beginFill(0x000000);
+      bigBar.drawRoundedRect(
         -bigText.width/2+3 + bigShadowDistance/2,
-        bigText.height/3 + bigShadowDistance/2,
+        bigText.height/5 + bigShadowDistance/2,
         bigText.width/1.4,
         bigText.height/16,
         3,
-      )
-      .stroke({
-        color: '#000000',
-        width: this.texture.height/40,
-      })
-      .fill('#000000')
-      .roundRect(
+      );
+      bigBar.endFill();
+      bigBar.beginFill(0xffffff);
+      bigBar.drawRoundedRect(
         -bigText.width/2+3,
-        bigText.height/3,
+        bigText.height/5,
         bigText.width/1.4,
         bigText.height/16,
         3,
-      )
-      .stroke({
-        color: '#000000',
-        width: this.texture.height/40,
-      })
-      .fill('#ffffff');
+      );
+      bigBar.endFill();
       this.addChild(bigBar);
     }
 
     if (img) {
       const offset = 9;
       const smallSprite = new Sprite(img);
-      smallSprite.scale = imgScale;
+      smallSprite.scale.x = imgScale;
+      smallSprite.scale.y = imgScale;
       smallSprite.x = -this.texture.width/2+offset;
       smallSprite.y = -this.texture.height/2+offset;
       const smallSpriteReversed = new Sprite(img);
-      smallSpriteReversed.scale = imgScale;
+      smallSpriteReversed.scale.x = imgScale;
+      smallSpriteReversed.scale.y = imgScale;
       smallSpriteReversed.x = this.texture.width/2-offset;
       smallSpriteReversed.y = this.texture.height/2-offset;
       smallSpriteReversed.rotation = Math.PI;
@@ -150,51 +144,67 @@ export class CardFront extends Sprite implements GameObject {
         fontSize: this.texture.height/7,
         fill: '#ffffff',
         align: 'center',
-        stroke: {
-          width: this.texture.height/60,
-          color: '#000000'
-        },
-        dropShadow: {
-          angle: Math.PI/4,
-          distance: smallShadowDistance,
-          color: '#000000'
-        },
+        stroke: '#000000',
+        strokeThickness: this.texture.height/60,
+        dropShadow: true,
+        dropShadowAngle: Math.PI/4,
+        dropShadowDistance: smallShadowDistance,
+        dropShadowColor: '#000000',
       });
-      const smallText = new Text({ text, style: smallStyle });
-      smallText.x = 8-this.texture.width/2;
-      smallText.y = 6-this.texture.height/2;
+      const smallText = new Text(text, smallStyle);
+      smallText.x = 8-this.width/2;
+      smallText.y = 1-this.height/2;
       this.addChild(smallText);
 
-      const smallTextReversed = new Text({ text, style: smallStyle });
+      const smallTextReversed = new Text(text, smallStyle);
       smallTextReversed.rotation = Math.PI;
-      smallTextReversed.x = -8+this.texture.width/2; // Center in the card
-      smallTextReversed.y = -6+this.texture.height/2; // Center in the card
+      smallTextReversed.x = -8+this.width/2;
+      smallTextReversed.y = -1+this.height/2;
       this.addChild(smallTextReversed);
 
       if (bigText && (value === '6' || value === '9')) {
         const smallBar = new Graphics()
-        .rect(
-          9-this.texture.width/2 + smallShadowDistance/2,
-          6-this.texture.height/2+smallText.height/1.2 + smallShadowDistance/2,
-          smallText.width/1.4,
-          smallText.height/16,
-        )
-        .stroke({
-          color: '#000000',
-          width: this.texture.height/60,
-        })
-        .fill('#000000')
-        .rect(
-          9-this.texture.width/2,
-          6-this.texture.height/2+smallText.height/1.2,
-          smallText.width/1.4,
-          smallText.height/16,
-        )
-        .stroke({
-          color: '#000000',
-          width: this.texture.height/60,
-        })
-        .fill('#ffffff');
+        smallBar.lineStyle(this.texture.height / 80, 0x000000);
+        smallBar.beginFill(0x000000);
+        smallBar.drawRect(
+          9 - this.texture.width / 2 + smallShadowDistance / 2,
+          0 - this.texture.height / 2 + smallText.height / 1.4 + smallShadowDistance / 2,
+          smallText.width / 1.4,
+          smallText.height / 16
+        );
+        smallBar.endFill();
+
+        smallBar.lineStyle(this.texture.height / 80, 0x000000);
+        smallBar.beginFill(0xffffff);
+        smallBar.drawRect(
+          9 - this.texture.width / 2,
+          0 - this.texture.height / 2 + smallText.height / 1.4,
+          smallText.width / 1.4,
+          smallText.height / 16
+        );
+        smallBar.endFill();
+        // .rect(
+        //   9-this.texture.width/2 + smallShadowDistance/2,
+        //   6-this.texture.height/2+smallText.height/1.2 + smallShadowDistance/2,
+        //   smallText.width/1.4,
+        //   smallText.height/16,
+        // )
+        // .stroke({
+        //   color: '#000000',
+        //   width: this.texture.height/60,
+        // })
+        // .fill('#000000')
+        // .rect(
+        //   9-this.texture.width/2,
+        //   6-this.texture.height/2+smallText.height/1.2,
+        //   smallText.width/1.4,
+        //   smallText.height/16,
+        // )
+        // .stroke({
+        //   color: '#000000',
+        //   width: this.texture.height/60,
+        // })
+        // .fill('#ffffff');
 
         const smallBar2 = smallBar.clone();
         smallBar2.rotation = Math.PI;
@@ -214,6 +224,7 @@ export class CardFront extends Sprite implements GameObject {
 
       const onHover = () => {
         const cardIndex = scene.players.get(self.id)?.hand.cards.findIndex(c => c === this);
+        if (cardIndex === undefined) return;
         scene.players.get(self.id)?.hand.setFocus(cardIndex);
         scene.players.get(self.id)?.hand.update();
       }
@@ -243,8 +254,8 @@ export class CardFront extends Sprite implements GameObject {
 }
 
 export class CardBack extends Sprite implements GameObject {
-  constructor(x, y, angle) {
-    super(cardSpritesheet.textures['back.png']);
+  constructor(x: number, y: number, angle: number) {
+    super(Texture.from('back.png'));
     this.width = cardWidth;
     this.height = cardHeight;
     this.anchor.set(0.5, 0.5);

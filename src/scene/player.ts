@@ -1,4 +1,4 @@
-import { Container, Graphics, type TickerCallback } from "pixi.js";
+import { Container, Graphics, Texture, type TickerCallback } from "pixi.js-legacy";
 
 import type { GameObject } from "./gameObject";
 import { scene, screen, self } from "./globals";
@@ -34,20 +34,23 @@ export class Player extends Container implements GameObject {
 
   createAvatar(): Container {
     const avatarGroup = new Container();
+    const texture = Texture.from(this.avatarName+'.png');
 
-    if (!scene.avatarSpritesheet?.textures[this.avatarName+'.png']) return avatarGroup;
-
-    const avatar = new Graphics()
-      .rect(0, 0, scene.avatarSpritesheet?.textures[this.avatarName+'.png'].width || 100, scene.avatarSpritesheet?.textures[this.avatarName+'.png'].height || 100)
-      .fill({ color: '#120b18' })
-      .texture(scene.avatarSpritesheet?.textures[this.avatarName+'.png']);
+    const avatar = new Graphics();
+    avatar.beginFill(0x120b18);
+    avatar.drawRect(0, 0, texture.width || 100, texture.height || 100);
+    avatar.endFill();
+    avatar.beginTextureFill({ texture });
+    avatar.drawRect(0, 0, texture.width || 100, texture.height || 100);
+    avatar.endFill();
 
     avatar.width = 100;
     avatar.height = 100;
 
-    const mask = new Graphics()
-      .roundRect(0, 0, avatar.width, avatar.height, avatar.width/2)
-      .fill({ color: '#ffffff' });
+    const mask = new Graphics();
+    mask.beginFill(0xffffff);
+    mask.drawCircle(avatar.width/2, avatar.height/2, avatar.width/2);
+    mask.endFill();
 
     mask.x = avatar.x;
     mask.y = avatar.y;
@@ -213,21 +216,21 @@ export class Player extends Container implements GameObject {
       const progress = Math.min((Date.now()-startTime)/30000, 1);
       this.timer.clear();
 
-      if (progress >= 1 && this.tickerFn) return scene.app.ticker.remove(this.tickerFn);
+      if (progress >= 1 && this.tickerFn) return scene.app?.ticker.remove(this.tickerFn);
 
       const endAngle = startAngle+Math.PI*2*(1-progress);
 
-      this.timer.beginFill('#ffffff');
+      this.timer.beginFill(0xffffff);
       this.timer.moveTo(pos.x, pos.y);
       this.timer.arc(pos.x, pos.y, radius, startAngle, endAngle);
       this.timer.lineTo(pos.x, pos.y);
       this.timer.endFill();
     }
-    scene.app.ticker.add(this.tickerFn);
+    scene.app?.ticker.add(this.tickerFn);
   }
   stopTimer() {
     this.timer.clear();
-    if (this.tickerFn) scene.app.ticker.remove(this.tickerFn);
+    if (this.tickerFn) scene.app?.ticker.remove(this.tickerFn);
   }
 
   updateAvatar() {

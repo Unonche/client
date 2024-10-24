@@ -1,5 +1,5 @@
 import type { GameObject } from "./gameObject";
-import { Container, Graphics } from "pixi.js";
+import { Container, Graphics } from "pixi.js-legacy";
 import { actions, colors, scene } from "./globals";
 
 export class ColorSelector extends Container implements GameObject {
@@ -13,9 +13,10 @@ export class ColorSelector extends Container implements GameObject {
     const offset = 15;
 
     Object.keys(colors).filter(c => c !== 'wild').map((color: string, i: number, allColors: string[]) => {
-      const g = new Graphics()
-        .circle(colorRadius, colorRadius, colorRadius)
-        .fill({ color: colors[color] })
+      const g = new Graphics();
+      g.beginFill(colors[color]);
+      g.drawCircle(colorRadius, colorRadius, colorRadius);
+      g.endFill();
 
       g.pivot.set(colorRadius, colorRadius);
       g.x = - (colorRadius*2*(allColors.length-1) + offset*(allColors.length-1))/2 + (colorRadius*2*i + offset*i);
