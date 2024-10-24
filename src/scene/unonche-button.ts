@@ -1,4 +1,4 @@
-import { Graphics, Sprite } from "pixi.js";
+import { Graphics, Sprite } from "pixi.js-legacy";
 import gsap from "gsap";
 import type { GameObject } from "./gameObject";
 import { actions, scene, screen } from "./globals";
@@ -6,7 +6,7 @@ import { actions, scene, screen } from "./globals";
 export class UnoncheButton extends Sprite implements GameObject {
   sprite: Sprite;
   circle: Graphics = new Graphics();
-  lastColor = '#ffffff';
+  lastColor = 0xffffff;
   circleAlpha = 0.5;
   circleHoverAlpha = 0.7;
   circleRadius = 60;
@@ -14,8 +14,9 @@ export class UnoncheButton extends Sprite implements GameObject {
   constructor() {
     super();
 
-    this.sprite = new Sprite(scene.assets['unonchebtn']);
-    this.sprite.scale = 0.5;
+    this.sprite = Sprite.from('unonchebtn.png');
+    this.sprite.scale.x = 0.5;
+    this.sprite.scale.y = 0.5;
 
     this.sprite.anchor.set(0.5, 0.5);
     this.anchor.set(0.5, 0.5);
@@ -50,10 +51,10 @@ export class UnoncheButton extends Sprite implements GameObject {
 
     this.addChild(this.circle);
     this.addChild(this.sprite);
-    scene.app.stage.addChild(this);
+    scene.app?.stage.addChild(this);
   }
 
-  setColor(color: string) {
+  setColor(color: number) {
     this.lastColor = color;
     this.sprite.tint = color;
     this.drawCircle();
@@ -61,13 +62,14 @@ export class UnoncheButton extends Sprite implements GameObject {
 
   drawCircle() {
     this.circle.clear();
-    this.circle.circle(0, 0, this.circleRadius).fill('#120b18').stroke({
-      color: this.lastColor, width: 3
-    });
+    this.circle.lineStyle(3, this.lastColor, 1);
+    this.circle.beginFill(0x120b18);
+    this.circle.drawCircle(0, 0, this.circleRadius);
+    this.circle.endFill();
   }
 
   update() {
-    if (!this.position) return;
+    if (!this.transform) return;
 
     if ((screen.isHorizontal || scene.playerIds.length <= 3) && !screen.isMicro) {
       this.x = scene.width/2+200;

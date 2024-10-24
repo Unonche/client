@@ -1,5 +1,5 @@
 import type { GameObject } from "./gameObject";
-import { Container, Graphics, Sprite, type TickerCallback } from "pixi.js";
+import { Container, Graphics, Sprite, type TickerCallback } from "pixi.js-legacy";
 import { scene } from "./globals";
 
 export class Decoration extends Container implements GameObject {
@@ -7,12 +7,12 @@ export class Decoration extends Container implements GameObject {
   spiralFn: TickerCallback<Sprite>;
   colorIndicator: Sprite = new Sprite();
   table: Graphics = new Graphics();
-  lastColor = '#ffffff';
+  lastColor = 0xffffff;
 
   constructor() {
     super();
 
-    this.spiralFn = ({ deltaTime }) => {
+    this.spiralFn = (deltaTime) => {
         this.spiral.rotation += (scene.reversed ? -0.003 : 0.003) * deltaTime;
     }
 
@@ -21,19 +21,19 @@ export class Decoration extends Container implements GameObject {
     this.initTable();
 
     this.update();
-    scene.app.stage.addChild(this);
+    scene.app?.stage.addChild(this);
   }
 
   initSpiral() {
-    this.spiral = new Sprite(scene.assets['spiral']);
+    this.spiral = Sprite.from('/spiral.png');
     this.spiral.anchor.set(0.5, 0.5);
 
     this.addChild(this.spiral);
 
-    scene.app.ticker.add(this.spiralFn);
+    scene.app?.ticker.add(this.spiralFn);
   }
   initColorIndicator() {
-    this.colorIndicator = new Sprite(scene.assets['radialgradient']);
+    this.colorIndicator = Sprite.from('/radialgradient.png');
     this.colorIndicator.width = 900;
     this.colorIndicator.height = 900;
     this.colorIndicator.anchor.set(0.5, 0.5);
@@ -49,12 +49,13 @@ export class Decoration extends Container implements GameObject {
 
   drawTable() {
     this.table.clear();
-    this.table.circle(scene.width/2, scene.height/2, 120).fill('#120b18').stroke({
-      color: this.lastColor, width: 3
-    });
+    this.table.lineStyle(3, this.lastColor, 1);
+    this.table.beginFill(0x120b18);
+    this.table.drawCircle(scene.width/2, scene.height/2, 120);
+    this.table.endFill();
   }
 
-  setColor(color: string) {
+  setColor(color: number) {
     this.lastColor = color;
     this.spiral.tint = color;
     this.colorIndicator.tint = color;
@@ -62,7 +63,7 @@ export class Decoration extends Container implements GameObject {
   }
 
   reset() {
-    this.setColor('#ffffff');
+    this.setColor(0xffffff);
     this.table.clear();
   }
 
