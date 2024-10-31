@@ -40,7 +40,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":100,"h":100},
 	"sourceSize": {"w":100,"h":100}
 },
-"michelblanc.jpeg":
+"michelblanc.png":
 {
 	"frame": {"x":500,"y":0,"w":100,"h":100},
 	"rotated": false,
@@ -103,6 +103,6 @@
 	"format": "RGBA8888",
 	"size": {"w":1200,"h":100},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:8e058706b43132afc570b50602f51e13:267523610dd94c50736343bff87de715:faac5bc2578b98332342aabac113e789$"
+	"smartupdate": "$TexturePacker:SmartUpdate:69ac266cd935fb0f92efdf7ca99ead7e:267523610dd94c50736343bff87de715:faac5bc2578b98332342aabac113e789$"
 }
 }
